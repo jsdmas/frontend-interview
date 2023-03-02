@@ -1,23 +1,29 @@
 # 목차
 ## HTML
 ● [DOCTYPE](#doctype)  
+    - meta
+    - open Graph Protocol
 ● [웹 표준 및 웹 접근성](#웹-표준-및-웹-접근성)  
+    - 웹 표준, 접근성
+    - 시맨틱 태그
+    - 크로스 브라우징
 ● [이미지 크기가 클 떄 개선방법](#이미지-크기가-클-경우-렌더링-속도가-느려질텐데-이를-개선하기-위한-방법)  
 ● [SVG란?](#svg란)  
+● [UI설명](#ui란-무엇인지-설명하시오)
 ## CSS 
 - [display](#display)
-- [position 속성에 대하여](#position-속성에-대하여)
-- float가 어떻게 작동하는가
-- Flexbox나 Grid 각각의 특징
-- 이미지 태그를 스타일로 대처하는 법
-- 반응형 웹의 3요소
-- CSS selector가 어떠한 원리로 동작하나요?
-- 반응형웹과 적응형웹을 설명하시오
-- PX, EM에 대해 설명하시오
-- CSS 적용 우선순위
-- CSS-in-JS에 대해 설명하세요
-- CSS 전처리기를 사용해보셨나요?
-- padding과 margin의 차이는 무엇인가요?
+- [position](#position-속성)
+- [float가 어떻게 작동하는가](#float-작동-원리)
+- [Flexbox나 Grid 각각의 특징](#flexbox--grid-특징)
+- [이미지 태그를 스타일로 대처하는 법](#이미지-태그를-스타일로-대체하는-법)
+- [반응형웹과 적응형웹을 설명하시오](#반응형웹과-적응형웹에-대하여)
+- [반응형 웹의 3요소](#반응형-웹의-3요소)
+- [CSS selector가 어떠한 원리로 동작하나요?](#css-selector가-어떠한-원리로-동작하나요)
+- [PX, EM에 대해 설명하시오](#px-em)
+- [CSS 적용 우선순위](#css-적용-우선순위)
+- [CSS-in-JS에 대해 설명하세요](#css-in-js)
+- [CSS 전처리기를 사용해보셨나요?](#css-전처리기)
+- [padding과 margin의 차이는 무엇인가요?](#padding-과-margin의-차이)
 
 # HTML
 ## DOCTYPE
