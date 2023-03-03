@@ -3,6 +3,7 @@
 1. 정리한 내용 2차정리
 2. 배열 함수 정리해서 링크걸기
 3. javaScript 기본 용어 정리
+4. 목차고치기
 ## 목차
 
 - 소개
@@ -55,7 +56,9 @@ JavaScript > Computer Sience > React & typeScript > HTML/CSS
 
 </details>
 
-## [JavaScript](./javaScript.md)
+## [JavaScript_정리1](./javaScript.md)
+
+## [JavaScript_정리2](./javaScript_2.md)
 
 ## [Computer Sience](./computerSience.md)
 

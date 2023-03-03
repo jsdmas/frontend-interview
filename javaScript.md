@@ -1,7 +1,7 @@
 # 목차
 
 파일 로딩이 너무 느려져 파일을 2개로 나누었습니다.   
-[JavaScript개념 2](./javaScript_2.md)
+[JavaScript_정리2](./javaScript_2.md)
 
 <details>
 <summary>접기 / 펼치기</summary>
@@ -1156,4 +1156,8 @@ this 바인딩은 this와 this가 가리킬 객체를 바인딩하는 것입니�
 ![image](https://user-images.githubusercontent.com/105098581/222659677-da44f15d-dd46-4150-9cfe-397cdda1c0ad.png)  
 
 **함수 실행 컨텍스트에 바인딩된 함수 렉시컬 환경**   
-![image](https://user-images.githubusercontent.com/105098581/222659717-f450ef0f-e5b1-4fba-800d-364da1490fae.png)
+![image](https://user-images.githubusercontent.com/105098581/222659717-f450ef0f-e5b1-4fba-800d-364da1490fae.png)  
+
+  
+[JavaScript_정리2](./javaScript_2.md)  
+[⬆︎TOP](#목차)  
