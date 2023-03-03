@@ -1,6 +1,7 @@
 # 프론트엔드 지식 & 면접질문 정리
-23.03.01 ~ 계속 수정중(미완)  
-해야할것 : 블로그 글 추가, 나머지 목차 완성
+23.03.01 ~ 계속 수정중(미완)   
+1. 정리한 내용 2차정리
+2. 배열 함수 정리해서 링크걸기
 ## 목차
 
 - 소개
@@ -24,12 +25,21 @@ JavaScript > Computer Sience > React & typeScript > HTML/CSS
 ## [HTML/CSS](./html_css.md)
 
 ### HTML
+<details>
+<summary>접기 / 펼치기</summary>
+
 - DOCTYPE
   - meta tag
 - 웹 표준 및 웹 접근성
 - img 처리방식
 - SVG란?
+
+</details>
+
 ### CSS
+<details>
+<summary>접기 / 펼치기</summary>
+
 - display
 - position
 - float 작동원리
@@ -41,6 +51,8 @@ JavaScript > Computer Sience > React & typeScript > HTML/CSS
 - CSS-in-JS
 - CSS 전처리기(CSS preprocessors)
 - padding과 margin의 차이
+
+</details>
 
 ## [JavaScript](./javaScript.md)
 
