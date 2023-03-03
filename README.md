@@ -2,8 +2,8 @@
 23.03.01 ~ 계속 수정중(미완)   
 1. 정리한 내용 2차정리
 2. 배열 함수 정리해서 링크걸기
-3. javaScript 기본 용어 정리
-4. 목차고치기
+3. javaScript 기본 용어 정리, 틀린 내용 고치기
+4. js 블로그 정리
 ## 목차
 
 - 소개
@@ -61,4 +61,12 @@ JavaScript > Computer Sience > React & typeScript > HTML/CSS
 ## [JavaScript_정리2](./javaScript_2.md)
 
 ## [Computer Sience](./computerSience.md)
+
+## 참고
+
+- [https://github.com/junh0328/prepare_frontend_interview/](https://github.com/junh0328/prepare_frontend_interview/)  
+- [https://github.com/baeharam/Must-Know-About-Frontend#page_with_curl-html](https://github.com/baeharam/Must-Know-About-Frontend#page_with_curl-html)
+
+
+
 
