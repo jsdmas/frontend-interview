@@ -53,21 +53,21 @@
     - JSON이 제공하는 정적 프로토타입 메서드에 대해 몇가지 말해볼 수 있나요?
     - Ajax로 HTTP 요청을 보내기 위해서는 어떤 방법을 사용할 수 있나요?
     - <span style="color: red">XMLHttpRequest와 fetch 메서드의 차이는 무엇이라고 생각하시나요?</span>
-- REST API
+- [REST API](#rest-api)
     - REST API가 뭔가요?
     - REST API의 구성은 어떤 것이 있나요?
     - REST API를 설계하는데 중요한 것이 있을까요?
     - HTTP 요청 메서드에 대해서 아는대로 얘기해보세요
     - <span style="color: red">HTTP 상태 코드를 아는대로 말해주세요</span>
-- Promise
+- [Promise](#promise)
     - <span style="color: red">콜백이란 뭐라고 생각하나요?</span>
     - <span style="color: red">프로미스가 뭔가요?</span>
     - 프로미스 생성 방법
     - <span style="color: red">프로미스의 상태를 나타내는 것은 어떤 것들이 있나요?</span>
     - <span style="color: red">프로미스 빌트인 객체가 제공하는 정적 메서드에 대해 알고 있나요?</span>
-- 제네레이터와 async await
-    - 제네레이터란 뭔가요? 일반 함수와는 어떤 차이가 있죠?
-    - 제네레이터의 구조
+- [제너레이터와 async await](#제너레이터와-async-await)
+    - 제너레이터란 뭔가요? 일반 함수와는 어떤 차이가 있죠?
+    - 제너레이터의 구조
     - <span style="color: red">async/await 가 뭔가요? 기존의 Promise와는 어떤 차이가 있죠?</span>
     - <span style="color: red">Promise와 async/await의 차이점 한 줄 요약</span>
 - 에러
@@ -787,52 +787,315 @@ JSON은 클라이언트와 서버 간의 HTTP 통신을 위한 텍스트 데이�
    - 이 문자열을 객체로 사용하려면 JSON 포맷의 문자열을 객체화 해야하는데 이를 역직렬화(deserializing)라 합니다. 
 
 ## Ajax로 HTTP 요청을 보내기 위해서는 어떤 방법을 사용할 수 있나요?
+1. XMLHttpRequest
+브라우저는 주소창이나 HTML의 form 태그 또는 a 태그를 통해 HTTP 요청 전송 기능을 기본 제공합니다.   
+자바스크립트를 사용하여 HTTP 요청을 전송하려면 XMLHttpRequest 객체를 사용합니다.   
+Wep API인 XMLHttpRequest 객체는 HTTP 요청 전송과 HTTP 응답 수신을 위한 다양한 메서드와 프로퍼티를 제공합니다.  
+**HTTP GET 요청**
+```js
+// XMLHttpRequest 객체 생성
+const xhr = new XMLHttpRequest();
+
+// HTTP 요청 초기화
+xhr.open("GET", "/users");
+
+// HTTP 요청 해더 설정
+// 클라이언트가 서버로 전송할 데이터의 MIME 타입 지정 : json
+xhr.setRequestHeader("content-type", "application/json");
+
+// HTTP 요청 전송
+xhr.send();
+```
+**HTTP POST 요청**
+```js
+const xhr = new XMLHttpRequest();
+xhr.open("POST", "/users");
+xhr.setRequestHeader("content-type", "application/json");
+xhr.send(JSON.stringify({id:1, content:"HTML", completed:false}));
+```
+**HTTP 응답 처리**
+```js
+const xhr = new XMLHttpRequest();
+xhr.open("POST", "http://naver.com");
+xhr.send();
+// load 이벤트는 HTTP 요청이 성공적으로 완료된 경우 발생합니다.
+xhr.onload = () => {
+    if(xhr.status === 200){
+        console.log(JSON.parse(xhr.response));
+    }else{
+        console.error(xhr.status, xhr.statusText);
+    }
+};
+```
+
+2. Fetch
+fetch 함수는 XMLHttpRequest 객체와 마찬가지로 HTTP 요청 전송 기능을 제공하는 클라이언트 사이드 Web API입니다.  
+프로미스를 지원하기 떄문에 비동기 처리를 위한 콜백 패턴의 단점에서 자유롭습니다.  
+
+```js
+// 옵션도 추가 가능합니다. 기본값 GET
+fetch("http://naver.com")
+    .then((response)=>response.json())
+    .catch((error)=>console.log(error));
+```
 
 ## XMLHttpRequest와 fetch 메서드의 차이는 무엇이라고 생각하시나요?
-
+둘다 Ajax 통신을 위해 사용됩니다.  
+하지만 `fetch`메서드는 Promise를 기반으로 구성되어 있어서 더 간편하게 사용할 수 있다는 차이점이 있습니다.  
+Promised의 후속 처리 메서드 `then, catch, finally`등을 사용하여 코드를 작성할 수 있습니다.  
 # REST API
 
 ## REST API가 뭔가요?
+REST는 Representational State Transfer의 약자로, 웹 서비스 아키텍처를 설계하는 데 사용되는 아키텍처 스타일입니다.  
+- REST는 HTTP를 기반으로 클라이언트가 서버의 리소스에 접근하는 방식을 규정한 아키텍처입니다.
+- REST API는 REST를 기반으로 서비스 API를 구현한 것을 의미합니다.
+- REST의 기본 원칙을 성실히 지킨 서비스 디자인을 **RESTful** 이라고 표현합니다.
+
 
 ## REST API의 구성은 어떤 것이 있나요?
+REST API는 자원(resource), 행위(verb), 표현(representations) 의 3가지 요소로 구성됩니다.  
+| 구성 요소             | 내용                           | 표현 방법        |
+| --------------------- | ------------------------------ | ---------------- |
+| 자원(resource)        | 자원                           | URI(엔드 포인트) |
+| 행위(verb)            | 자원에 대한 행위               | HTTP 요청 메서드 |
+| 표현(representations) | 자원에 대한 행위의 구체적 내용 | 페이로드         |
 
 ## REST API를 설계하는데 중요한 것이 있을까요?
+REST에서 가장 중요한 기본적인 원칙은 두 가지입니다.  
+1. URI는 리소스를 표현하는데 집중해야 한다.
+2. 행위에 대한 정의는 HTTP 요청 메서드를 통해 해야 한다.
+
+위 두 규칙이 RESTful API를 설계하는 중심 규칙입니다.   
+URI는 리소스를 표현해야 하고, URI는 리소스를 표현하는 데 중점을 두어야 합니다.  
+리소스를 식별할 수 있는 이름은 동사보다는 명사를 사용합니다.  
+따라서 리소스 이름에 get 같은 행위에 대한 표현이 들어가서는 안 됩니다.  
+```
+# bad
+GET /getTodos/1
+GET /todos/show/1
+
+# good
+GET /todos/1
+```
+그 외에도 소문자를 사용해야 하고, 언더바대신 하이픈을 사용하고, uri의 마지막에는 슬래시를 포함하지 않아야하며 계층관계를 나타낼 때는 슬래시 구분자를 사용해야 합니다.  
 
 ## HTTP 요청 메서드에 대해서 아는대로 얘기해보세요
+| HTTP 요청 메서드 | 종류           | 목적                  | 페이로드 |
+| ---------------- | -------------- | --------------------- | -------- |
+| GET              | index/retrieve | 모든/특정 리소스 취득 | X        |
+| POST             | create         | 리소스 생성           | O        |
+| PUT              | replace        | 리소스의 전체 교체    | O        |
+| PATCH            | modify         | 리소스 일부 수정      | O        |
+| DELETE           | delete         | 모든/특정 리소스 삭제 | X        |
 
 ## HTTP 상태 코드를 아는대로 말해주세요
+`2XX`
+| 상태 코드 | 코드 명 | 의미                                                    |
+| --------- | ------- | ------------------------------------------------------- |
+| 200       | OK      | 요청이 성공적으로 보내졌음을 의미                       |
+| 201       | Created | 요청이 성공적이였으며 새로운 리소스가 생성되었음을 의미 |
 
-# Prommise
+`4XX`
+| 상태 코드 | 코드 명     | 의미                                                       |
+| --------- | ----------- | ---------------------------------------------------------- |
+| 400       | Bad Request | 잘못된 문법으로 인하여 서버가 요청을 이해할 수 없음을 의미 |
+| 401       | Unathorized | 비인증(Unathorize)된 요청임을 의미                         |
+| 403       | Forbidden   | 콘텐츠에 접근할 권리를 가지고 있지 않음을 의미             |
+| 404       | Not Found   | 요청받은 리소스를 찾을 수 없음을 의미                      |
+
+`5XX`
+| 상태 코드 | 코드 명               | 의미                                  |
+| --------- | --------------------- | ------------------------------------- |
+| 500       | Internal Server Error | 서버가 처리 방법을 모르는 상황을 의미 |
+
+
+# Promise
 
 ## 콜백이란 뭐라고 생각하나요?
+자바스크립트에서 콜백 함수는 다른 함수의 매개변수로 함수를 전달하고, 어떠한 이벤트가 발생한 후 매개변수로 전달한 함수가 다시 호출되는 것을 의미합니다.   
+어떤 일을 다른 객체에게 시키고, 그 일이 끝나는 것을 기다리지 않고 끝나고 부를 때까지 다른 일을 하는 것을 말합니다.  
+이 떄문에 `동기`가 아닌 `비동기`적으로 처리되는 비동기 방식의 함수라고 할 수 있습니다.  
 
 ## 프로미스가 뭔가요?
+자바스크립트에서는 비동기 처리를 위한 패턴중 하나로 콜백 함수를 사용합니다.  
+전통적인 콜백 패턴은 일명 `콜백 헬`로 인해 가독성이 나쁘고 비동기 처리 중 발생한 에러의 처리가 곤란하며 여러 개의 비동기 처리를 한 번에 처리하는데 한계를 느꼈다.  
+프로미스는 ES6에서 도입된, 콜백 함수의 문제점인 비동기 처리를 해결하기 위한 또 하나의 패턴입니다.  
+```js
+get("/step1", (a)=>{
+    get(`/step2/${a}`, (b)=>{
+        get(`/step3/${b}`, (c)=>{
+            console.log(c);
+        })
+    })
+})
+```
 
 ## 프로미스 생성 방법
-
+[Promise](https://jsdmas.github.io/js/JS_promises/)  
+Promise 생성자 함수를 new 연사자와 함께 호출하면 프로미스(Promise 객체)를 생성합니다.  
+ES6에서 도입된 Promise는 호스트 객체가 아닌 ECMAScript 사양에 정의된 표준 빌트인 객체입니다.  
+Promise 생성자 함수는  비동기 처리를 수행할 콜백 함수를 인수로 전달받는데 이 콜백 함수는 resolve와 reject 함수를 인수로 전달받습니다.  
+```js
+const promise = new Promise((resolve, reject)=>{
+    if(/* 비동기 처리 성공 */){
+        resolve(`result`);
+    }else{
+        /* 비동기 처리 실패 */
+        reject(`failure reason`);
+    }
+});
+```
+Promise 생성자 함수가 인수로 전달받은 콜백 함수 내부에서 비동기 처리를 수행합니다.   
+이떄 비동기 처리가 성공하면 resolve를, 실패하면 reject를 호출합니다.  
 ## 프로미스의 상태를 나타내는 것은 어떤 것들이 있나요?
+| 프로미스의 상태 정보 | 의미                                  | 상태 변경 조건                  |
+| -------------------- | ------------------------------------- | ------------------------------- |
+| pending              | 비동기 처리가 아직 수행되지 않은 상태 | 프로미스가 생성된 직후 기본상태 |
+| fulfilled            | 비동기 처리가 수행된 상태(성공)       | resolve 함수 호출               |
+| reject               | 비동기 처리가 수행된 상태(실패)       | reject 함수 호출                |
 
+생성된 직후 프로미스는 기본적으로 pending 상태입니다.  
+이후 비동기 처리가 수행되면 비동기 처리 결과에 따라 다음과 같이 프로미스의 상태가 변경됩니다.  
+fulfilled 또는 rejected인 상태를 settled 상태라고 합니다.  
+settled 상태는 fulfilled 또는 rejected 상태와 상관없이 pending이 아닌 상태로 비동기 처리가 수행된 상태를 말합니다.  
+settled 상태가 되면 더는 다른 상태로 변화할 수 없습니다.  
 ## 프로미스 빌트인 객체가 제공하는 정적 메서드에 대해 알고 있나요?
+- Promise.resolve/ Promise.reject
+- Promise.all
+- Promise.race
+- Promise.allSettled
+- Promise.any
 
-# 제네레이터와 async await
+# 제너레이터와 async await
 
-## 제네레이터란 뭔가요? 일반 함수와는 어떤 차이가 있죠?
+## 제너레이터란 뭔가요? 일반 함수와는 어떤 차이가 있죠?
+ES6에서 도입된 제너레이터(generator)는 코드 블록의 실행을 일시 중지 (블로킹) 했다가 필요한 시점에 재개할 수 있는 특수한 함수입니다.   
+제너레이터와 일반 함수의 차이는 다음과 같습니다.  
+- 제너레이터 함수는 함수 호출자가 함수 실행을 일시 중지시키거나 재개시킬 수 있다.
+  - 제너레이터 함수 호출자가 함수 실행을 일시 중지시키거나 재개시킬 수 있다.
+  - 이는 함수의 제어권을 함수가 독점하는 것이 아니라 함수 호출자에게 양도(yield)할 수 있다는 것을 의미한다.
+- 제너레이터 함수는 함수 호출자와 함수의 상태를 주고받을 수 있다.
+  - 제너레이터 함수는 함수 호출자에게 상태를 전달할 수 있고 함수 호출자로부터 상태를 전달받을 수도 있다.
+- 제너레이터 함수를 호출하면 제너레이터 객체를 반환한다.
+  - 제너레이터 함수를 호출하면 함수 코드를 실행하는 것이 아니라 이터러블이면서 동시에 이터레이터인 제너레이터 객체를 반환합니다.
 
-## 제네레이터의 구조
-
+## 제너레이터의 구조
+제너레이터는 `yield`키워드와 `next`메서드를 통해 실행을 일시 중지했다가 필요한 시점에 다시 재개할 수 있습니다.   
+일반 함수는 호출 이후 제어권을 해당 함수가 독점하지만, 제너레이터는 함수 호출자에게 제어권을 양도(yield)하여 필요한 시점에 함수 실행을 재개할 수 있습니다.   
+next 메서드를 통해 제너레이터를 실행할 경우, 코드 블록 내에 yield 키워드 뒤에 오는 표현식의 평가 결과를 제너레이터 함수 호출자에게 객체형식으로 반환합니다.  
+```
+{value : , done : }
+```
+  
+```js
+function* genFunc(){
+    yield 1;
+    yield 2;
+    yield 3;
+}
+// 제너레이터 함수를 호출하면 제너레이터 객체를 반환합니다.
+// 이터러블이면서 동시에 이터레이터인 제너레이터 객체는 next 메서드를 갖습니다.
+const generator = genFunc();
+console.log(generator.next()); // {value: 1, done: false}
+console.log(generator.next()); // {value: 2, done: false}
+console.log(generator.next()); // {value: 3, done: false}
+console.log(generator.next()); // {value: undefined, done: true}
+```
 ## async/await 가 뭔가요? 기존의 Promise와는 어떤 차이가 있죠?
-
+async / await 는 비동기 작업을 처리하기 위한 문법 중 하나로, Promise를 더 쉽게 사용하기 위한 문법입니다.  
+비동기 작업을 처리하는 코드를 보다 간결하게 작성할 수 있습니다.  
+`async/await`을 사용하면 `Promise`를 사용하는 것보다 코드가 더 직관적이며, 예외 처리가 더 간편해집니다.   
+기존 Promise는 `then, catch`메서드를 사용하였는데 async/await를 사용하면 `try/catch`문을 사용하여 비동기 작업에서 발생할 수 있는 예외를 처리할 수 있습니다.  
+```js
+async function hello(){
+    try{
+        const response = await fetch("https://naver.com");
+        const data = await response.json();
+    }catch(error){
+        console.log(error);
+    }
+}
+```
+- `async 함수`
+  - async 함수는 async 키워드를 사용해 정의하며 언제나 프로미스를 반환합니다.
+  - async 함수가 명시적으로 프로미스를 반환하지 않더라도 async 함수는 암묵적으로 반환 값을 resolve 하는 프로미스를 반환합니다.
+- `await`
+  - 프로미스가 settled 상태(비동기 처리가 수행된 상태)가 될 때까지 대기하다가 settled 상태가 되면 프로미스가 resolve한 처리 결과를 반환합니다.
+  - await 키워드는 반드시 프로미스 앞에서 사용해야 합니다.
 
 ## Promise와 async/await의 차이점 한 줄 요약
+1. 에러 핸들링
+   - Promise 를 활용할 시에는 .catch() 문을 통해 에러 핸들링을 해야 하지만,
+   - async/await 는 try/catch 를 통해 에러를 처리할 수 있습니다.
+2. 코드 가독성
+   - Promise의 후속 처리 메서드인 .then() 의 hell의 가능성
+   - async/await 는 프로미스의 후속 처리 메서드 없이 마치 동기 처리처럼 프로미스가 처리 결과를 반환하도록 구현할 수 있기 때문에 코드 흐름을 이해 하기 쉽다.
+
 
 # 에러
 
 ## 에러처리를 왜 해야 하나요?
+1. 애플리케이션의 안정성과 신뢰성을 향상 시키기위해서
+2. 예측할 수 없는 오류 방지
+3. 디버깅 및 유지보수 용이성
 
 ## 자바스크립트에서 에러를 처리하는 방법에는 뭐가 있을까요?
+1. try catch finally
+2. Error 객체
+3. throw 문
 
+**Error 객체**  
+Error 생성자 함수는 에러 객체를 생성합니다.  
+Error 생성자 함수에는 에러를 상세히 설명하는 에러 메시지를 인수로 전달할 수 있습니다.  
+```js
+const error = new Error("invalid");
+```
+자바스크립트는 Error 생성자 함수를 포함해 7가지의 에러 객체를 생성할 수 있는 Error 생성자 함수를 제공합니다.  
+해당 함수가 생성한 에러 객체의 프로토타입은 모두 Error.prototype을 상속받습니다.  
+| 생성자 함수    | 인스턴스                                                                      |
+| -------------- | ----------------------------------------------------------------------------- |
+| Error          | 일반적인 에러 객체                                                            |
+| SyntaxError    | 자바스크립트 문법에 맞지 않는 문을 해석할 때 발생하는 에러 객체               |
+| ReferenceError | 참조할 수 없는 식별자를 참조했을 때 발생하는 에러 객체                        |
+| TypeError      | 피연산자 또는 인수의 데이터 타입이 유효하지 않을 때 발생하는 에러 객체        |
+| RangeError     | 숫자값의 허용 범위를 벗어낫을 때 발생하는 에러 객체                           |
+| URIError       | encoeURI 또는 decodeURI 함수에 부적절한 인수를 전달했을 때 발생하는 에러 객체 |
+| EvalError      | eval 함수에서 발생하는 에러 객체                                              |
+
+**throw 문**  
+Error 생성자 함수로 에러 객체를 생성한다고 에러가 발생하는 것은 아닙니다.  
+즉, 에러 객체 생성과 에러 발생은 의미가 다릅니다.  
+```js
+function sum (x, y) {
+  if (typeof x !== 'number' || typeof y !== 'number') {
+    // Error 객체를 사용하게 되면 해당 콜 스택 정보가 같이 출력되기 떄문에 어디에서 에러가 발생했는지에 대한 정보를 얻을 수 있습니다.
+    throw new Error "숫자를 입력하세요"
+  }
+  return x + y; 
+}
+
+console.log(sum("abc", 1))
+```
 # 모듈
 
 ## 모듈이 뭔가요?
+모듈(module)이란 애플리케이션을 구성하는 개별적 요소로서 재사용 가능한 코드 조각을 말합니다.  
+일반적으로 모듈은 기능을 기준으로 파일 단위로 분리합니다. 이때 모듈이 성립하려면 모듈은 자신만의 파일 스코프(모듈 스코프)를 가질 수 있어야 합니다.  
+자신만의 파일 스코프를 갖는 모듈의 자산(모듈에 포함되어 있는 변수, 함수, 객체 등)은 기본적으로 비공개 상태입니다.  
+즉, 모듈은 개별적 존재로서 애플리케이션과 분리되어 존재합니다.  
+모듈은 공개가 필요한 자산에 한정하여 명시적으로 선택적 공개가 가능한데 이를 `export`
+라 합니다.  
+공개(export)자산은 다른 모듈에서 재사용 할 수 있습니다. (의존성을 갖게 된다.)   
+이때 공개된 모듈의 자산을 사용하는 모듈을 모듈 사용자(module consumer) 라 한다.    모듈 사용자는 모듈이 공개(export)한 자산 중 일부 또는 전체를 선택해 자신의 스코프 내로 불러들여 재사용할 수 있다. 이를 import 라 한다.  
+```js
+// myModule.js
+export function add(a,b){
+    return a + b;
+};
+export const name = "JinHo";
 
-
+// main.js
+import {add, name} from "./myModule.js";
+console.log(add(2,1)); // 3
+console.log(name); // JinHo
+```
