@@ -70,10 +70,10 @@
     - 제너레이터의 구조
     - <span style="color: red">async/await 가 뭔가요? 기존의 Promise와는 어떤 차이가 있죠?</span>
     - <span style="color: red">Promise와 async/await의 차이점 한 줄 요약</span>
-- 에러
+- [에러](#에러)
     - 에러처리를 왜 해야 하나요?
     - 자바스크립트에서 에러를 처리하는 방법에는 뭐가 있을까요?
-- 모듈
+- [모듈](#모듈)
     - 모듈이 뭔가요?
 
 </details>
