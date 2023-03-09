@@ -280,6 +280,43 @@
 
 ## [React](./react.md)
 
+- React 시작
+- 리액트를 사용하는 이유
+- virtual DOM에 대해서 아시나요
+- JSX가 뭔가요?
+- React에서 함수 컴포넌트와 클래스 컴포넌트의 차이<span style="color:red">★★</span>
+- 리액트에서 함수형 컴포넌트라고 부르지 않고 함수 컴포넌트라고 부르는 이유가 무엇인가요?<span style="color:red">★★</span>
+- props와 state의 차이<span style="color:red">★★</span>
+- Props가 컴포넌트간에 전달받는 것이라고 했는데 자식에서 부모로도 전달할 수 있는가?<span style="color:red">★★</span>
+- FLUX에 대해서 아시나요?style="color:red">★★</span>
+- 리덕스에 대해서 아시나요?style="color:red">★★</span>
+- 리덕스의 기본 원칙은?style="color:red">★★</span>
+- React에서 state의 불변성을 유지하라는 말이 있는데 이에 대해 설명주세요<span style="color:red">★★</span>
+- 리듀서 내부에서 불변성을 지키는 이유는?<span style="color:red">★★</span>
+- 리액트 사용시에 부수효과로 인해 생기는 문제점이 있다면?style="color:red">★★</span>
+  - 부수 효과를 일으키는 함수 (불순 함수)
+  - 부수 효과를 일으키지 않는 함수 (순수 함수)
+  - 요약
+- 컴포넌트의 라이프 사이클 메서드<span style="color:red">★★</span>
+  - 이해
+  - 메서드 종료
+- Hooks의 종류
+  - useState
+  - useEffect
+  - useMemo
+  - useCallback
+    - useMemo, useCallback 의 차이점 <span style="color:red">★★</span>
+  - useRef
+- useCallback을 사용할 떄와 사용하지 않고 함수를 선언할 때는 어떤 차이가 있나요?
+- 리액트에서 setState는 비동기 동작인가요 동기 동작인가요?
+- 리액트의 성능개선 방법에 대해서 설명해주세요
+- 컴포넌트에서 이벤트를 실행시키기 위해서는 어떻게 핸들링해야 하나요?
+- SPA가 뭔가요
+  - SPA의 단점
+- SSR이 뭔가요
+- CSR이 뭔가요
+- SEO가 뭔가요
+  - TTV, TTI
 
 
 ## [TypeScript](./typeScript.md)
