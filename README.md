@@ -7,3 +7,10 @@
 
 ✅ 개인적으로 정리한 내용이라 틀린내용이 있을 수 있습니다.   
 
+
+
+1. 알고리즘
+2. HTML, CSS
+3. typeScript
+4. javaSript
+
