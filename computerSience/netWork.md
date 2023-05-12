@@ -10,7 +10,6 @@
 - TCP와 UDP를 설명해주세요
 - TCP의 3-Way-HandShake와 4-Way-HandShake에 대해 설명해주세요
 
-
 # 웹 프로토콜(Web Protocol)
 
 > 인터넷 상에서 정보를 주고받는데 사용하는 통신 규약(protocol)입니다.
