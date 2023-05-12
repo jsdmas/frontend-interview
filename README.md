@@ -10,7 +10,6 @@
 
 
 1. 알고리즘
-2. HTML, CSS
-3. typeScript
-4. javaSript
+2. typeScript
+3. javaSript
 
