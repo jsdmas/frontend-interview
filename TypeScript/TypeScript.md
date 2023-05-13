@@ -84,7 +84,9 @@ interface가 더 가볍다고도 할 수 있습니다.
   - 클래스의 종속적인 메서드를 의미합니다.
   - 즉, 클래스와 메서드는 항상 연결되어 있지만, 해당 클래스의 특정 인스턴스와는 연결되어있지 않습니다.
   - 그래서 정적메서드는 특정 객체(클래스)에 저장된 데이터에 접근할 수 없습니다.
-  - 정적 메서드는 클래스의 인스턴스 없이 호출이 가능합니다.
+  - 정적 메서드는 클래스의 인스턴스 없이 호출이 가능합니다. (보통 유틸리티 함수를 만드는데 사용됩니다.)
+  - 클래스의 데이터를 가져오지 못하고 객체 인스턴스를 생성해도 마찬가지로 데이터를 가져오지 못합니다.
+
 ```js
 class Test {
     static var = "static 변수";
@@ -95,5 +97,19 @@ class Test {
 
 console.log(Test.var) // static 변수
 console.log(Test.foo()) // static 함수
+```
+
+```js
+class Person{
+    construtor(){
+        this._name = "hello";
+    }
+    static get name(){
+        return this._name;
+    }
+}
+console.log(Person.name) // undefined
+const person = new Person();
+console.log(person.name) // undefined
 ```
 

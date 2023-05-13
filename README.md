@@ -10,6 +10,5 @@
 
 
 1. 알고리즘
-2. typeScript
-3. javaSript
+2. javaSript
 
