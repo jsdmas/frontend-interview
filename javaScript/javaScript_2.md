@@ -6,7 +6,7 @@
 <summary>접기 / 펼치기</summary>
 
 - [클로저](#클로저)
-    - <span style="color: red">클로저에 대해 아시나요?</span>
+    - <span style="color: red">⭐️ 클로저가 뭔가요?</span>
     - <span style="color: red">클로저를 사용하면 뭐가 좋죠?</span>
     - <span style="color: red">클로저를 어떻게 생성하나요?</span>
 - [클래스](#클래스)
@@ -28,11 +28,12 @@
     - DOM이 뭔가요?
     - DOM을 구성하는 건 뭐가 있을까요?
 - [이벤트](#이벤트)
+    - ⭐ 이벤트 버블링과 캡처링에 대해 설명해주세요.
+    - ⭐ 이벤트 전파(propagation)에 대해서 알고 있나요?
+    - ⭐ 이벤트 위임(delegation)에 대해서 알고있나요?
     - 마우스 이벤트 타입에는 뭐가 있나요? click 말고 클릭을 대체할 수 있는 이벤트가 있나요?
     - 그 외에 알고있는 대표적인 이벤트가 있나요?
     - 이벤트 핸들러를 등록하는 방식에는 어떤 것들이 있나요?
-    - 이벤트 전파(propagation)에 대해서 알고 있나요?
-    - <span style="color: red">이벤트 위임(delegation)에 대해서 알고있나요?</span>
     - e.preventDefault 에 대해 알고 있나요?
     - e.stopPropagation
 - [타이머](#타이머)
@@ -81,11 +82,9 @@
 
 # 클로저
 
-## 클로저에 대해서 아시나요?
-내부함수가 이미 생명주기를 마감한 외부함수(outer)의 변수를 참조할 수 있다면 그 함수를 클로저라고 합니다.  
-클로저는 함수와 그 함수가 선언된 렉시컬 환경과의 조합입니다.  
-간단히 말해, 클로저는 함수 내부에서 선언된 변수를 외부에서 접근할 수 없게 되는데, 이때 해당 함수와 변수들의 조합을 클로저라고 부릅니다.   
-즉, 클로저를 통해 함수 내부에서 선언한 변수를 계속해서 참조할 수 있게 됩니다.  
+## ⭐️ 클로저가 뭔가요?
+> 클로저란 함수가 속한 렉시컬 스코프를 기억하여 함수가 렉시컬 스코프 밖에서 실행될 때도 그 스코프에 접근할 수 있게 하는 기능을 말합니다.
+
 ```js
 function makeCounter(){
     let count = 0;
@@ -103,40 +102,17 @@ counter2(); // 1
 counter2(); // 2
 //  outer함수의 실행 컨텍스트는 사라지지만 렉시컬 환경까지는 사라지지 않는다.
 ```
-  
-- 상위 스코프의 식별자를 참조하지 않는 경우
-```js
-function foo(){
-    const x = 1;
-    const y = 2;
-    function bar(){
-        const z = 3;
-        console.log(z);
-    }
-    return bar;
-}
-const bar = foo();
-bar();
-```
-위 예제의 중첩 함수 bar는 외부 함수 foo보다 더 오래 유지되지만 상위 스코프의 어떤 식별자(x,y)도 참조하지 않습니다.  
-이처럼 상위 스코프의 어떤 식별자도 참조하지 않는 경우 대부분의 모던 브라우저는 최적화를 통해 상위 스코프를 기억하지 않습니다.  
-참조하지도 않는 식별자를 기억하는 것은 메모리 낭비이기 때문입니다.   
-`따라서 bar 함수는 클로저라고 할 수 없습니다.`  
-> 참조하는 식별자를 실행 컨텍스트가 종료되어도 렉시컬 환경을 통해 참조하고, 값을 변경할 수 있는 것이 클로저 입니다.
-
-
 ## 클로저를 사용하면 뭐가 좋죠?
-- **클로저는 상태(state)를 안전하게 변경하고 유지하기 위해 사용합니다.**   
-  - 다시 말해, 상태가 의도치 않게 변경되지 않도록 상태를 안전하게 은닉(information hiding)하고 특정 함수에게만 상태변경을 허용하기 위해 사용합니다.  
 
-
+- 데이터 은닉화
+- 지속적인 상태 유지
+- 함수 팩토리
 ## 클로저를 어떻게 생성하나요?
-클로저를 생성하는 가장 일반적인 방법은 함수 내부에서 새로운 함수를 정의하고, 그 함수를 반환하는 것입니다. 반환된 함수는 자신이 생성된 렉시컬 스코프에서 선언된 변수를 계속해서 참조할 수 있습니다.
+> 함수 내부에서 새로운 함수를 정의하고, 그 함수를 반환하는 것입니다. 반환된 함수는 자신이 생성된 렉시컬 스코프에서 선언된 변수를 계속해서 참조할 수 있습니다.
 ```js
 function makeAdder(x){
     return function(y){
         // y를 가지고있고 상위함수인 makeAdder 의 x 에 접근가능
-
         return x + y;
     };
 }
@@ -416,6 +392,50 @@ DOM은 노드 객체의 계층적인 구조로 구성됩니다. 노드 객체는
 
 # 이벤트
 
+## ⭐ 이벤트 전파(propagation)에 대해서 알고 있나요?
+
+> DOM(Documnet Object Model)요소에서 발생한 이벤트가 상위 요소로 전달되는 방식을 말합니다.
+HTML 문서의 각 엘리먼트들은 아래와 같이 태그안의 태그가 위치하는 식으로 **계층적**으로 이루어짐을 볼 수 있습니다.  
+이러한 계층적 구조 특징 떄문에 만일 HTML 요소에 이벤트가 발생할 경우 **연쇄적 이벤트 흐름**이 일어나게 됩니다.  
+```html
+<form onclick="alert('form')">FORM
+    <div onclick="alert('div')">DIV
+    	<p onclick="alert('p')">P</p>
+    </div>
+</form>
+<!-- p 클릭시 p, div, form alert가 순차적으로 나타남-->
+```
+이러한 현상을 이벤트 전파(Event Propagation)라 부르며, 전파 방향에 따라 버블링과 캡처링으로 구분합니다.  
+
+### 이벤트 전파 흐름
+
+1. 캡처링 단계 : 이벤트가 하위 요소로 전파되는 단계
+2. 타깃 단계 : 이벤트가 실제 타깃 요소에 전달되는 단계
+3. 버블링 단계 : 이벤트가 상위 요소로 전파되는 단계
+
+![](https://github.com/jsdmas/dev-matching-fe-practice/assets/105098581/15bc02b3-1ee5-4293-a45c-84fe49c097ba)
+1. `td`를 클릭하면 이벤트가 최상위 조상에서 시작해 아래로 전파됩니다. (캡처링)
+2. 이벤트가 타겟 요소에 도착해 리스너를 실행합니다.(타깃)
+3. 그리고 다시 상위로 이벤트를 전파합니다. (버블링)
+
+## ⭐ 이벤트 위임(delegation)에 대해서 알고있나요?
+
+> 하위 엘리먼트들이 여러개 있을 떄, 하위 엘리먼트들에 각각 이벤트 핸들러를 달지 않고 상위 엘리먼트에 이벤트 핸들러를 달아 하위 엘리먼트들을 제어하는 방식입니다.
+ 
+- 동적으로 엘리먼트를 추가할 떄마다 핸들러를 고려할 필요가 없습니다.
+- 상위 엘리먼트에 하나의 이벤트 핸들러만 추가하면 되기 때문에 코드가 훨씬 깔끔해집니다.
+- 메모리에 있게되는 이벤트 핸들러가 적어지기 때문에 퍼포먼스 측면에서 이점이 있습니다.
+
+## ⭐ 이벤트 버블링과 캡처링에 대해 설명해주세요.
+
+![](https://github.com/jsdmas/dev-matching-fe-practice/assets/105098581/7498656e-5528-4666-8eee-cbb1f3fcb90d)
+
+### 이벤트 버블링(Bubbling)
+> 하위 엘리먼트 이벤트가 발생시 그 엘리먼트부터 시작해서 상위요소까지 전달되는 방식을 말합니다.
+
+### 이벤트 캡처링
+> 하위 엘리먼트에 이벤트가 있을 떄 상위 엘리먼트부터 이벤트가 발생하기 시작해서 하위 엘리먼트까지 이벤트가 전달되는 방식을 말합니다.
+
 ## 마우스 이벤트 타입에는 뭐가 있나요? click 말고 클릭을 대체할 수 있는 이벤트가 있나요?
 > mouseup
 | 이벤트 타입 | 이벤트 발생 시점                                      |
@@ -527,62 +547,7 @@ DOM은 노드 객체의 계층적인 구조로 구성됩니다. 노드 객체는
 </html>
 ```
 
-## 이벤트 전파(propagation)에 대해서 알고 있나요?
-DOM 트리상에 존재하는 모든 DOM 요소 노드에서 발생한 이벤트는 DOM 트리를 통해 전파됩니다. 이를 이벤트 전파라고 합니다.  
-사용자의 다양한 입력을 통해 동적으로 생성되는 이벤트 객체는 이벤트를 발생시킨 타깃(target)을 중심으로 DOM 트리를 통해 전파됩니다.  
-전파되는 방향에 따라 3단계로 구분할 수 있습니다.
-- 캡처링 단계 : 이벤트가 상위 요소에서 하위 요소 방향으로 전파
-- 타깃 단계 : 이벤트가 이벤트 타깃에 도달
-- 버블링 단계 : 이벤트가 하위 요소에서 상위 요소 방향으로 전파
 
-![image](https://user-images.githubusercontent.com/105098581/223305964-dba25922-da51-44c0-98a9-6224f37f1d29.png)
-
-브라우저는 기본적으로 이벤트 버블링 단계에서 이벤트를 캐치합니다.  
-```html
-<html>
-    <head>
-        <meta charset="UTF-8"/>
-        <title>hello</title>
-        <body>
-            <div>click</div>
-        </body>
-        <script>
-            const html = document.querySelector("html");
-            const body = document.querySelector("body");
-            const div = document.querySelector("div");
-
-            html.addEventListener("click", ()=> console.log("HTML"));
-            html.addEventListener("click", ()=> console.log("BODY"));
-            html.addEventListener("click", ()=> console.log("DIV"));
-        </script>
-    </head>
-</html>
-```
-div 클릭시
-```
-DIV
-BODY
-HTML
-```
-![image](https://user-images.githubusercontent.com/105098581/223307152-a2bd7f4f-0df2-465b-aa68-e40b3f0c408c.png)  
-이벤트 캡처링 단계라면 HTML > BODY > DIV 순으로 상위 노드에서 하위 노드로 내려오며 이벤트를 캐치할 것입니다.  
-하지만 브라우저는 기본적으로 이벤트 버블링 단계인 우리가 클릭하고자 한 이벤트 객체인 타깃인`<div>`에 도달한 후 다시 해당 하위 노드에서 상위 노드로 돌아가는 과정에서 이벤트를 캐치 합니다.   
-addEventListener 메서드의 세번째 인수(argument)로 옵션인[, useCaputure]자리에 boolean 값인 true를 넣어준다면, 캡처링 단계에서도 이벤트 객체를 캐치할 수 있습니다.  
-기본값은 false로, 버블링 단계에서 이벤트 객체를 캐치합니다.
-
-```js
-html.addEventListener("click", ()=> console.log("HTML"), true);
-html.addEventListener("click", ()=> console.log("BODY"), true);
-html.addEventListener("click", ()=> console.log("DIV"));
-
->>>
-HTML
-BODY
-DIV
-```
-
-## 이벤트 위임(delegation)에 대해서 알고있나요?
-연속되는 태그에 대해서 공통적으로 이벤트를 줘야할 떄 우리가 이벤트 핸들러를 바인딩할 해당 요소의 부모요소에게 이를 위임하여 이벤트를 진행하는 것 을 이벤트 위임(event delegation) 이라 합니다.  
 ## e.preventDefault 에 대해 알고 있나요?
 e.preventDefault 메서드는 요소 태그의 기본 동작을 중단합니다.
 ## e.stopPropagation
