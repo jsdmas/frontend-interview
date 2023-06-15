@@ -3,6 +3,7 @@
 - [JavaScript가 뭔가요?](#javascript)
   - javaScript의 특징
   - <span style="color: red">컴파일러는 뭐고 인터프리터는 뭔가요?</span>
+  - 콜 스택 (Call Stack)과 힙 (Heap)에 대해 설명해주세요.
 - [비동기 처리 예시](#비동기-처리-예시)
   - AJAX가 뭔가요?
 - [변수](#변수variable)
@@ -118,6 +119,33 @@
 > 컴파일러는 프로그래밍 언어로 작성된 소스 코드를 컴퓨터가 이해하는 기계어로 번역하여 실행 파일을 만드는 프로그램입니다.  
 > 인터프리터는 소스 코드를 한 줄씩 읽어들여 번역과 동시에 프로그램을 즉시 실행시킵니다.  
 이에따라 인터프리터는 컴파일러보다는 느리지만, 코드 수정과 테스트가 빠르게 가능하다는 장점이 있습니다.
+
+## 콜 스택 (Call Stack)과 힙 (Heap)에 대해 설명해주세요.
+
+> 자바스크립트 엔진이 자바스크립트를 실행할 떄 원시 타입 참조 및 참조 타입을 저장하는 메모리 구조로 콜 스택과 힙을 가집니다.
+
+- 콜 스택(Call Stack) : 원시타입 값 과 함수 호출의 실행 컨텍스트(Execution Context)를 저장하는 곳입니다.
+- 힙 (Heap) : 객체, 배열, 함수와 같이 크기가 동적으로 변할 수 있는 참조타입 값 을 저장하는 곳입니다.
+```js
+let a = 10;
+let b = 35;
+let arr = [];
+function foo(){
+    const c = a + b;
+    const obj = { d : c };
+    return obj;
+}
+let o = foo();
+```
+위 코드로 콜 스택과 힙의 동작을 살펴보면 아래 그림과 같습니다.  
+1. GEC(Global Execution Context)가 생성되고 원시 값은 콜 스택에, 참조 값은 힙에 저장됩니다.
+![](https://github.com/jsdmas/frontend-interview/assets/105098581/8956d900-0ed7-4196-a3f0-e2b7466ac86d)
+2. 그 다음 함수 `foo`를 실행하게 되고 새로운 FEC(Function Execution Context)가 생성되며 동일하게 원시 값은 스택에, 참조 값은 힙에 저장됩니다.
+![memory2](https://github.com/jsdmas/frontend-interview/assets/105098581/e34c5b52-c5e1-4f09-9387-60b9058bd207)
+3. 이후, 함수`foo`이 객체 `obj`를 리턴해서 `o`에 저장됩니다. 리턴하기 때문에 FEC는 콜 스택에서 제거됩니다.
+![memory3](https://github.com/jsdmas/frontend-interview/assets/105098581/fd5bc734-d074-47d6-a554-0546368cee84)
+전체 코드가 실행이 끝나고 GEC가 콜 스택에서 제거됩니다.  
+GEC가 제거됨에 따라서, 힙의 객체를 참조하는 스택의 값이 없기 때문에 가비지 컬렉터(Garbage Collector, GC)에 의해 제거됩니다.
 
 # 비동기 처리 예시
 
