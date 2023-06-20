@@ -16,7 +16,7 @@
     - 클래스 정의
     - 클래스의 상속
 - [스프레드 문법](#스프레드-문법)
-    - spread 문법이 뭔가요?
+    - Rest 연산자와 Spread 연산자에 대해 설명해주세요.
     - 어떤 상황에서 사용할 수 있죠?
 - [구조 분해 할당](#구조-분해-할당)
     - 구조 분해 할당이 뭔가요?
@@ -70,6 +70,7 @@
     - <span style="color: red">프로미스의 상태를 나타내는 것은 어떤 것들이 있나요?</span>
     - <span style="color: red">프로미스 빌트인 객체가 제공하는 정적 메서드에 대해 알고 있나요?</span>
 - [제너레이터와 async await](#제너레이터와-async-await)
+    - 이터러블과 이터레이터 프로토콜에 대해 설명해주세요.
     - 제너레이터란 뭔가요? 일반 함수와는 어떤 차이가 있죠?
     - 제너레이터의 구조
     - <span style="color: red">async/await 가 뭔가요? 기존의 Promise와는 어떤 차이가 있죠?</span>
@@ -258,9 +259,11 @@ User.sayHello(); // hello~
 [class](https://jsdmas.github.io/js/JS_prototypes_Class/#class)  
 # 스프레드 문법
 
-## Spread 문법이 뭔가요?
-[spread](https://jsdmas.github.io/js/JS_Rest_Spread/)   
-전개문법 `...` 은 하나로 뭉쳐 있는 여러 값들의 집합을 펼쳐서 개별적인 값들의 목록으로 만듭니다.  
+## Rest 연산자와 Spread 연산자에 대해 설명해주세요.
+[spread, rest](https://jsdmas.github.io/js/JS_Rest_Spread/)   
+> rest는 모든 값을 하나의 변수로 축소 (contract) 시켜주는것이다.
+> spread는 변수를 가져와서 풀어 해치고 전개하는 것이다
+
 ## 어떤 상황에서 사용할 수 있죠?
 1. Array
 2. String
@@ -974,39 +977,158 @@ settled 상태가 되면 더는 다른 상태로 변화할 수 없습니다.
 
 # 제너레이터와 async await
 
+## 이터러블과 이터레이터 프로토콜에 대해 설명해주세요.
+- [ref](https://inpa.tistory.com/entry/JS-%F0%9F%93%9A-%EC%9D%B4%ED%84%B0%EB%9F%AC%EB%B8%94-%EC%9D%B4%ED%84%B0%EB%A0%88%EC%9D%B4%ED%84%B0-%F0%9F%92%AF%EC%99%84%EB%B2%BD-%EC%9D%B4%ED%95%B4)
+
+
+### 이터러블
+> 이터러블(iterable)이란 자료를 반복할 수 있는 객체를 말하는 것입니다.
+우리가 흔히 쓰는 배열 역시 **이터러블 객체**입니다.  
+
+### 이터러블과 이터레이터
+> iterable Protocol / iterator Protocol
+
+정의 : 이터러블을 \[for...of], [전개 연산자], \[비구조화].. 등, 이터러블이나 이터레이터 프로토콜을 따르는 연산자들과 함께 동작하도록 하는 약속된 규약을 의미합니다.  
+그래서 이터러블이란 이터러블 규약을 따르는 객체인 셈입니다.  
+
+### iterable
+정의 : 이터레이터를 리턴하는 \[Symbol.iterator]() 메서드를 가진 객체  
+배열의 경우 Array.prototype의 Symbol.iterator 를 상속받기 때문에 이터러블입니다. 문자열도 마찬가지 입니다.  
+![](https://github.com/jsdmas/frontend-interview/assets/105098581/9247d80f-e401-4172-ba81-7459780efa43)  
+
+### iterator
+정의 : {value : 값, done : true/false} 형태의 이터레이터 객체를 리턴하는 next() 메서드를 가진 객체입니다.  
+next 메서드로 순환 할 수 있는 객체입니다.  
+\[Symbol.iterator]() 안에 정의되어 있습니다.  
+```js
+const arr = [1,2,3];
+const iter = arr[Symbol.iterator]();
+/*
+key값을 문자열이 아닌 변수로 주기위해 arr[변수] 형태를 가집니다.
+위 사진에서 보듯이, Symbol.iterator 라는 key값을 가지고 value는 함수입니다.
+이를 접근해서 함수실행() 시키면 이터레이터 객체가 반환되어 iter에 담기게 됩니다.
+*/
+iter.next()
+// {value:1, done:false}
+iter.next()
+// {value:2, done:false}
+iter.next()
+// {value:3, done:false}
+iter.next()
+// {value:undefined, done:true}
+```
+
+![](https://github.com/jsdmas/frontend-interview/assets/105098581/ccfd27f4-823e-4dd5-b93b-2448e1b1fa95)
+
+### \[Symbol.iterator]
+
+이터러블 객체 만들기
+```js
+let range = {
+  from : 1,
+  to : 5
+}
+
+range[Symbol.iterator] = function(){
+  return {
+    current : this.from,
+    last : this.to,
+    next(){
+      if(this.current < this.last){
+        return { done : false, value : this.current++ };
+      }else{
+        return { done : true };
+      }
+    }
+  }
+}
+
+alert([...range]); // 1, 2, 3, 4, 5
+```
+#### 무엇이 이터러블 객체이고 무엇이 이터레이터 인가?
+- 이터러블 객체는 `range`입니다.
+  - 이유는 Symbol.iterator메서드를 가지고 있기 때문입니다.
+- 이터레이터 객체는 Symbol.iterator() 메서드에서 리턴한 객체가 바로 `이터레이터` 입니다.
+  - 이 객체 안에는 `{value:값, done:true/false}`를 리턴하는 next()메서드가 있기 때문입니다.
+
+![](https://github.com/jsdmas/frontend-interview/assets/105098581/0949f14e-532c-4150-bee8-9ad8d3a4b77d)
+
+#### 위의 예시에서의 for..of 순회
+1. for..of가 시작되자마자 for..of는 Symbol.iterator를 호출합니다.
+2. 이후 for..of는 반환된 객체(이터레이터)만을 대상으로 동작합니다.
+3. for..of에 다음 값이 필요하면, for..of는 이터레이터의 next()메서드를 호출합니다.
+4. next()의 반환값은 `{doen: Boolean, value: any}`와 같은 형태여야 합니다.
+   - 그래야 순회가 되며 `done=true`는 순회가 종료되었음을 의미합니다.
+   - `done=false`는 value에 다음 값이 저장됩니다.
+
+### 한방에 이터러블 + 이터레이터 구현하기
+한 객체에 아예 이터레이터 형식을 정의하면, range객체는 이터러블 객체이자 이터레이터 객체 역할을 모두 수행할 수 있습니다.  
+표현만 다를뿐 실행자체는 위의 예제와 다를바 없습니다.
+```js
+let range = {
+  from : 1,
+  to : 5,
+  [Symbol.iterator](){
+    this.current = this.from,
+    this.last = this.to;
+    return this;
+  },
+  next(){
+    if(this.current < this.last){
+      return { done:false, value:this.current++ }
+    }else{
+      return { done:true };
+    }
+  },
+};
+
+for(let num of range){
+  alert(num) // 1, 2, 3, 4, 5
+}
+```
+
 ## 제너레이터란 뭔가요? 일반 함수와는 어떤 차이가 있죠?
-ES6에서 도입된 제너레이터(generator)는 코드 블록의 실행을 일시 중지 (블로킹) 했다가 필요한 시점에 재개할 수 있는 특수한 함수입니다.   
-제너레이터와 일반 함수의 차이는 다음과 같습니다.  
-- 제너레이터 함수는 함수 호출자가 함수 실행을 일시 중지시키거나 재개시킬 수 있다.
-  - 제너레이터 함수 호출자가 함수 실행을 일시 중지시키거나 재개시킬 수 있다.
-  - 이는 함수의 제어권을 함수가 독점하는 것이 아니라 함수 호출자에게 양도(yield)할 수 있다는 것을 의미한다.
-- 제너레이터 함수는 함수 호출자와 함수의 상태를 주고받을 수 있다.
-  - 제너레이터 함수는 함수 호출자에게 상태를 전달할 수 있고 함수 호출자로부터 상태를 전달받을 수도 있다.
-- 제너레이터 함수를 호출하면 제너레이터 객체를 반환한다.
-  - 제너레이터 함수를 호출하면 함수 코드를 실행하는 것이 아니라 이터러블이면서 동시에 이터레이터인 제너레이터 객체를 반환합니다.
+- [ref](https://inpa.tistory.com/entry/JS-%F0%9F%93%9A-%EC%A0%9C%EB%84%88%EB%A0%88%EC%9D%B4%ED%84%B0-%EC%9D%B4%ED%84%B0%EB%A0%88%EC%9D%B4%ED%84%B0-%EA%B0%95%ED%99%94%ED%8C%90)
+
+> 이터레이터를 리턴하는 함수입니다.
+(async가 Promise를 리턴하듯, 제네레이터는 이터레이터를 리턴하는 함수입니다.)  
+제네레이터 함수를 사용하면 이터레이션 프로토콜을 준수해 이터러블을 생성하는 방식보다 간편하게 구현할 수 있습니다.  
+
+### 일반 함수와의 차이점
+제네레이터 함수는 일반 함수처럼 코드 블록을 한 번에 실행하지 않고 함수 코드 블록의 실행을 일시중지했다가 필요한 시점에 재시작할 수 있는 특수한 함수입니다.  
 
 ## 제너레이터의 구조
-제너레이터는 `yield`키워드와 `next`메서드를 통해 실행을 일시 중지했다가 필요한 시점에 다시 재개할 수 있습니다.   
-일반 함수는 호출 이후 제어권을 해당 함수가 독점하지만, 제너레이터는 함수 호출자에게 제어권을 양도(yield)하여 필요한 시점에 함수 실행을 재개할 수 있습니다.   
-next 메서드를 통해 제너레이터를 실행할 경우, 코드 블록 내에 yield 키워드 뒤에 오는 표현식의 평가 결과를 제너레이터 함수 호출자에게 객체형식으로 반환합니다.  
-```
-{value : , done : }
-```
-  
+
 ```js
-function* genFunc(){
-    yield 1;
-    yield 2;
-    yield 3;
+const range = function* (){
+  let i = 0;
+  while(true){
+    if (i < 5){
+      // yield : 생산하다
+      // yield를 만나면 일시정지되고, 값을 건내줍니다. 그리고 for..of에 의해 next()가 호출되면 함수 실행을 이어나갑니다.
+      yield ++i;
+    }else return;
+  }
+};
+for(let i of range()){
+  console.log(i); // 1, 2, 3, 4, 5
 }
-// 제너레이터 함수를 호출하면 제너레이터 객체를 반환합니다.
-// 이터러블이면서 동시에 이터레이터인 제너레이터 객체는 next 메서드를 갖습니다.
-const generator = genFunc();
-console.log(generator.next()); // {value: 1, done: false}
-console.log(generator.next()); // {value: 2, done: false}
-console.log(generator.next()); // {value: 3, done: false}
-console.log(generator.next()); // {value: undefined, done: true}
 ```
+
+```js
+let range = {
+  from : 1,
+  to : 5,
+  *[Symbol.iterator]() {
+    for(let value = this.from; value <= this.to; value++){
+      yield value;
+    }
+  }
+};
+alert([...range]); // 1, 2, 3, 4, 5
+```
+
+
 ## async/await 가 뭔가요? 기존의 Promise와는 어떤 차이가 있죠?
 async / await 는 비동기 작업을 처리하기 위한 문법 중 하나로, Promise를 더 쉽게 사용하기 위한 문법입니다.  
 비동기 작업을 처리하는 코드를 보다 간결하게 작성할 수 있습니다.  
