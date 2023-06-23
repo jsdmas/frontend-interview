@@ -26,9 +26,10 @@
   - 부수 효과를 일으키지 않는 함수 (순수 함수)
   - 요약
 - [⭐ 컴포넌트의 라이프 사이클 메서드](#⭐-컴포넌트의-라이프-사이클-메서드)<span style="color:red">★★</span>
-- [⭐ Hooks의 종류](#⭐-hooks의-종류)<span style="color:red">★★</span>
+- [⭐ Hooks](#⭐-hooks)<span style="color:red">★★</span>
   - useState
   - useEffect
+    - ⭐ 함수형 컴포넌트에서 클래스형 컴포넌트의 라이프 사이클 메소드를 비슷하게 사용하는 방법에 대해 설명해주세요.
   - useMemo
   - useCallback
     - useMemo, useCallback 의 차이점 <span style="color:red">★★</span>
@@ -37,7 +38,6 @@
 - [리액트에서 setState는 비동기 동작인가요 동기 동작인가요?](#리액트에서-setstate는-비동기-동작인가요-동기-동작인가요)
 - [리액트의 성능개선 방법에 대해서 설명해주세요](#리액트의-성능개선-방법에-대해서-설명해주세요)
 - [컴포넌트에서 이벤트를 실행시키기 위해서는 어떻게 핸들링해야 하나요?](#컴포넌트에서-이벤트를-실행시키기-위해서는-어떻게-핸들링해야-하나요)
-
 - [SEO가 뭔가요](#seo가-뭔가요)
   - TTV, TTI
 
@@ -189,12 +189,14 @@ class MyComponent extends React.Component {
 - 객체지향 프로그래밍의 구조를 띄고 있으며, state를 초기화히기 위해서는 construtor(생성자)함수를 필요로 합니다.
 - 라이프사이클 API를 사용할 수 있습니다.
 - state를 직접 변경가능해서 mutable(가변적)입니다.
+- setState 사용 방법이 함수형과 다르게 한번에 변경 가능합니다.
 
 ## function component
 - 선언하기 좀 더 편하고 메모리 자원을 덜 사용합니다.
 - 빌드 파일 크기가 클래스형 컴포넌트보다 더 작습니다.
 - 라이프사이클 API 대신 v16.8 업데이트 이후에 적용된 Hooks를 통해 해결되었습니다.
 - state를 직접 변경 못해서 immutable(불변적)입니다.
+- 변수 각각에 대해 setState함수가 따로 존재합니다.
 
   
 기본 구조, state사용법, props 전달받는 법 등의 차이점이 있습니다.
@@ -265,6 +267,16 @@ console.log(add(1,2));
 
 # ⭐ 컴포넌트의 라이프 사이클 메서드
 - [ref](https://react.vlpt.us/basic/25-lifecycle.html)
+
+| 분류       | 클래스형 컴포넌트      | 함수형 컴포넌트      |
+| ---------- | ---------------------- | -------------------- |
+| Mounting   | construtor()           | 함수형 컴포넌트 내부 |
+| Mounting   | render()               | return()             |
+| Mounting   | ComponentDidMount()    | useEffect()          |
+| Updating   | componentDidUpdate()   | useEffect()          |
+| UnMounting | componentWillUnmount() | useEffect()          |
+
+
 
 ![](https://github.com/jsdmas/frontend-interview/assets/105098581/535f6731-1c54-42a7-9b38-90b923b2cf4d)
 생명주기 메서드(LifeCycle Method)는 컴포넌트가 브라우저상에 나타나고, 업데이트되고, 사라지게 될 떄 호출되는 메서드들 입니다.  
@@ -361,8 +373,24 @@ componentDidUpdate(prevProps, prevState, snapshot) {
 #### componentWillUnmount
 `componentWillUnmount` 는 컴포넌트가 화면에서 사라지기 직전에 호출됩니다.
 
-# ⭐ Hooks의 종류
-Hook은 React 버전 16.8부터 새로 추가된 기능으로, 클래스를 작성하지 않고도 상태값과 여러 React의 기능을 사용할 수 있게 해줍니다.
+# ⭐ Hooks
+Hook은, 클래스를 작성하지 않고도 함수 컴포넌트에서도 상태값과 여러 React의 기능을 사용할 수 있게 해줍니다.
+
+```jsx
+function Cunter(props){
+  let count = 0;
+  return (
+    <div>
+      <p>총 {count}번 클릭했습니다.</p>
+      <button onClick={()=> count++}>클릭</button>
+    </div>
+  )
+}
+```
+위의 코드의 경우 count값을 증가 시킬수는 있지만 reRendering이 일어나지 않아 새로운 count값이 화면에 표시되지 않게 됩니다.  
+(react는 컴포넌트의 state나 props의 변경을 추적하여 리렌더링을 수행하기때문)  
+위의 경우처럼 함수형 컴포넌트에서 class컴포넌트처럼 기능을 수행하고자 만든 기능이 hook입니다.
+
 ## useState
 - 가장 기본적인 Hook으로 첫 번쨰 원소는 상태 값, 두 번째 원소는 상태를 설정하는 함수입니다.
 - 이 함수에 파라미터를 넣어서 호출하면 전달받은 파라미터로 값이 바뀌고 컴포넌트가 정상적으로 리렌더링 됩니다.
@@ -372,20 +400,45 @@ import {useState} from "react";
 const [value, setvalue] = useState(0);
 ```
 
-## useEffect
-- 리액트 컴포넌트가 렌더링될 떄마다 특정 작업을 수행하도록 설정할 수 있는 Hook입니다.
-- 기본적으로 렌더링되고 난 직후마다 실행되며 두 번째 파라미터 배열에 무엇을 넣는지에 따라 실행되는 조건이 달라집니다.
+## useEffect 
+- side effect(react에서는 효과, 영향)를 수행하기 위한 Hook
+- 렌더링이 끝난 이후 실행됩니다.
+- class 컴포넌트에서 제공하는 생명주기함수인  componentDidMount, componentDidUpdate,  componentWillUnMount 와 동일한 기능을 하나로 통합하여 제공합니다.
 
+```js
+useEffect(이펙트 함수, 의존성 배열); 
+```
+  
+### ⭐ 함수형 컴포넌트에서 클래스형 컴포넌트의 라이프 사이클 메소드를 비슷하게 사용하는 방법에 대해 설명해주세요.
+
+| deps의 값               | 구조                    | 설명                                                                                                 |
+| ----------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------- |
+| 값이 없을 경우          | useEffect(()=>{})       | 화면이 렌더링 된 이후 수행이 되며, 리 렌더링이 발생하는 경우 다시 수행이 된다.(update될 때마다 수행) |
+| 빈 배열 인경우          | useEffect(()=>{},[])    | 화면이 렌더링 된 이후에만 수행이 된다.(mount, unmount)                                               |
+| 배열 값이 존재하는 경우 | useEffect(()=>{},\[값]) | 화면이 렌더링 된 이후에 수행이 되고, value가 변경될 경우 해당 메서드가 수행이 된다.                  |
+
+
+#### useEffect => ComponentDidMount
 
 ```jsx
-// 마운트만 실행
+useEffect(()=>{ console.log('Component is mounted'); })
+```
+
+#### useEffect => ComponentDidUpdate
+data가 변경될 때마다 useEffect 이펙트 함수 실행
+```jsx
+useEffect(()=>{ console.log('Component is mounted'); }, [data])
+```
+
+#### useEffect => ComponentWillUnmount
+useEffect return 값으로 함수를 줄떄 ComponentWillUnmount
+```jsx
 useEffect(()=>{
-    console.log(`마운트될 때만 실행됨`);
-},[]);
-// 특정 값 업데이트될 때만 실행
-useEffect(()=>{
-    console.log(name);
-},[name]);
+  console.log('Component is mounted');
+  return () => {
+      console.log('Component is unmounted');
+    };
+})
 ```
 ## useMemo
 연산의 결과값을 저장해두고 동일한 연산이 반복될 때 이전에 저장된 값을 재사용하는 것입니다.  
