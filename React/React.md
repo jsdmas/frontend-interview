@@ -19,13 +19,20 @@
   - setState는 동기적으로 동작하나요? 아니면 비동기적으로 동작하나요?
     - 왜 비동기적으로 동작하나요?
   - HTML과 React의 이벤트 처리 차이점에 대해 설명해주세요.
+  - Ref의 용도에 대해 설명해주세요.
 - [virtual DOM에 대해서 아시나요](#virtual-dom에-대해서-아시나요)
   - Virtual DOM 작동 원리에 대해 설명해주세요.
 - [JSX가 뭔가요?](#jsx가-뭔가요)
-- 엘리먼트와 컴포넌트의 차이에 대해 설명해주세요.
-- 리액트에서 컴포넌트를 어떻게 생성하나요?
-- 클래스형 컴포넌트를 사용해보셨나요?
-- 함수형 컴포넌트의 장점에 대해 설명해주세요.
+- [엘리먼트와 컴포넌트의 차이에 대해 설명해주세요.](#엘리먼트와-컴포넌트의-차이에-대해-설명해주세요)
+- [리액트에서 컴포넌트를 어떻게 생성하나요?](#리액트에서-컴포넌트를-어떻게-생성하나요)
+- [클래스형 컴포넌트를 사용해보셨나요?](#클래스형-컴포넌트를-사용해보셨나요)
+- [함수형 컴포넌트의 장점에 대해 설명해주세요.](#함수형-컴포넌트의-장점에-대해-설명해주세요)
+- [제어 컴포넌트와 비제어 컴포넌트의 차이에 대해 설명해주세요.](#제어-컴포넌트와-비제어-컴포넌트의-차이에-대해-설명해주세요)
+- [HOC (Higher-Order Components)에 대해 설명해주세요.](#hoc-higher-order-components에-대해-설명해주세요)
+- [Context API에 대해 설명해주세요.](#context-api에-대해-설명해주세요)
+- [React.Fragment에 대해 설명해주세요.](#reactfragment에-대해-설명해주세요)
+- [Portal에 대해 설명해주세요.](#portal에-대해-설명해주세요)
+- [에러 바운더리에 대해 설명해주세요.](#에러-바운더리에-대해-설명해주세요)
 - [React에서 함수 컴포넌트와 클래스 컴포넌트의 차이](#react에서-함수-컴포넌트와-클래스-컴포넌트의-차이)<span style="color:red">★★</span>
 - [리액트에서 함수형 컴포넌트라고 부르지 않고 함수 컴포넌트라고 부르는 이유가 무엇인가요?](#리액트에서-함수형-컴포넌트라고-부르지-않고-함수-컴포넌트라고-부르는-이유가-무엇인가요)<span style="color:red">★★</span>
 - [props와 state의 차이](#props와-state의-차이)<span style="color:red">★★</span>
@@ -190,18 +197,6 @@ function ChildComponent({foo}){
 
 ## Props와 State의 차이에 대해 설명해주세요.
 
-1. React 이벤트 이름은 소문자 대신 camelCase를 사용하여 표시합니다.
-2. JSX에 문자열 대신 함수를 전달합니다.
-
-html
-```html
-<button onclick="activateButton()">클릭하세요</button>
-```
-React
-```jsx
-<button onClick={activateButton}>클릭하세요</button>
-```
-
 ### Props(properties)
 - 컴포넌트 외부에서 컴포넌트에 전달되는 데이터입니다.
 - 읽기 전용(read-only)이며, 부모 컴포넌트에서 자식 컴포넌트로 전달됩니다.
@@ -297,6 +292,21 @@ function foo(){
 
 ## HTML과 React의 이벤트 처리 차이점에 대해 설명해주세요.
 
+1. React 이벤트 이름은 소문자 대신 camelCase를 사용하여 표시합니다.
+2. JSX에 문자열 대신 함수를 전달합니다.
+
+html
+```html
+<button onclick="activateButton()">클릭하세요</button>
+```
+React
+```jsx
+<button onClick={activateButton}>클릭하세요</button>
+```
+
+## Ref의 용도에 대해 설명해주세요.
+
+react에서 DOM요소나 컴포넌트 인스턴스에 접근하기 위한 방법을 제공합니다.(가상 DOM요소에 접근)  
 
 # virtual DOM에 대해서 아시나요
 - [ref](https://velog.io/@yesbb/virtual-dom%EC%9D%98-%EC%84%B1%EB%8A%A5%EC%9D%B4-%EB%8D%94-%EC%A2%8B%EC%9D%80%EC%9D%B4%EC%9C%A0#prerequisite-)
@@ -403,6 +413,182 @@ class MyComponent extends React.Component {
    - immutable한 props를 받기 떄문에 결국 렌더링 결과가 보장받습니다.
 3. 코드가 간결해지고 가독성이 더 좋습니다.
 
+
+# 제어 컴포넌트와 비제어 컴포넌트의 차이에 대해 설명해주세요.
+
+| 기능                                              | 제어 컴포넌트 | 비제어 컴포넌트 |
+| ------------------------------------------------- | ------------- | --------------- |
+| 일회성 정보 검색(ex:제출)                         | O             | O               |
+| 제출 시 값 검증                                   | O             | O               |
+| 실시간으로 필드값의 유효성 검사                   | O             | X               |
+| 조건부로 제출 버튼 활성화 (disabled)              | O             | X               |
+| 실시간으로 입력 형식 적용하기(숫자만 가능하게 등) | O             | X               |
+| 동적 입력                                         | O             | X               |
+
+## 제어 컴포넌트
+> React에 의해 값이 제어되는 입력 폼 엘리먼트를 controlled component 라고 합니다.
+> 사용자의 입력을 기반으로 자신의 state를 관리하고 업데이트합니다.
+
+제어 컴포넌트의 값은 **항상 최신값**을 유지합니다.  
+새로운 입력 값이 생길떄 마다 상태를 새롭게 갱신합니다.  
+- 유효성 검사, disabled 등에 사용됩니다.
+
+
+## 비제어 컴포넌트
+> 제어 컴포넌트에서 처럼 setState()를 쓰지 않고 ref를 이용해 값을 얻습니다.
+필드에서 값을 트리거 해야 값을 얻을 수 있습니다.  
+불필요한 렌더링과 값 동기화가 싫다면 사용합니다.
+
+# HOC (Higher-Order Components)에 대해 설명해주세요.
+
+> 고차 컴포넌트는 컴포넌트를 인자로 받아 새로운 컴포넌트로 변환해 반환하는 함수입니다.
+
+```jsx
+import React from 'react';
+import Loading from '../components/Loading';
+
+const withLoading = (WrappedComponent) => props => {
+  if (props.isLoading) return <Loading/>
+  return <WrappedComponent {...props}/>
+}
+
+export default withLoading;
+```
+
+# Context API에 대해 설명해주세요.
+- [ref](https://velog.io/@velopert/react-context-tutorial)
+## Context
+> React에서 상태를 전역적으로 공유하고 컴포넌트 간에 데이터를 전달하기 위한 기능을 제공하는 API입니다.
+
+**사용법**  
+Context는 리액트 패키지에서 `createContext`라는 함수를 불러와서 만들 수 있습니다.  
+```jsx
+import { createContext } from "react";
+const MyContext = createContext();
+```
+Context 객체 안에는 Provider라는 컴포넌트가 들어있습니다. 그리고, 그 컴포넌트간에 공유하고자 하는 값을 `value`라는 Props로 설정하면 자식 컴포넌트들에서 해당 값에 바로 접근이 가능합니다.
+```jsx
+function App(){
+  return(
+    <MyContext.Provider value="Hello, World!">
+      <GrandParent />
+    </MyContext.Provider>
+  );
+}
+```
+이렇게 하면, 원하는 컴포넌트에서 `useContext`라는 Hook을 사용하여 Context에 넣은 값에 바로 접근할 수 있습니다.  
+해당 Hook 인자에는 `createContext`로 만든 `MyContext`를 넣습니다.
+```jsx
+import { createContext, useContext } from "react";
+function Message(){
+  const value = useContext(MyContext);
+  return <div>Received : {value}</div>;
+}
+```
+**provider 미사용의 경우**  
+`provider`컴포넌트로 감싸는 것을 깜빡했다면 `value`값을 따로 지정하지 않았기 떄문에, `undefined`로 조회되어 해당 값이 나타나지 않게됩니다.  
+기본값을 설정해 주고 싶다면 `createContext`함수에 인자로 기본 값을 넣어주시면 됩니다.  
+```js
+const myContext = createContext("default value");
+```
+
+# React.Fragment에 대해 설명해주세요.
+
+JSX의 규칙상 하나의 태그로 묶어서 return 해줘야 하는데, 이떄 fragment를 사용하면 dom에 별도의 노드를 추가하지 않고 여러 자식을 그룹화 할 수 있습니다.
+```JSX
+return(
+  <React.Fragment>
+    <h1>Hello, World!</h1>
+  </React.Fragment>
+)
+// 축약형
+return(
+  <>
+    <h1>Hello, World!</h1>
+  </>
+)
+```
+
+# Portal에 대해 설명해주세요.
+
+> 컴포넌트가 종속되어 있는 돔 트리를 벗어나 외부의 다른 돔으로 렌더하는 기능입니다.
+어플리케이션은 하나이지만 부분적으로 다른 돔에 마운트 할 수 있습니다.   
+
+
+```jsx
+const PortalModal = props => {
+  // 모달이 마운트 될 엘리먼트. (루트 엘리먼트와 다른 곳입니다.)
+  const modalRoot = document.querySelector("#modal-root");
+  // 모달 엘리먼트를 modalRoot에 마운트 할것이다.
+  return ReactDOM.createPortal(<Modal {...props} />, modalRoot);
+};
+
+// App.js
+function App(){
+  return(
+    <div>
+      <h1>Hello, World!</h1>
+      <PortalModal />
+    </div>
+  );
+};
+```
+`ReactDOM.render` 처럼 `ReactDOM.createPortal(reactElement, domElement)`도 리액트 엘리먼트를 돔 엘리먼트에 그립니다.   
+**첫번쨰 인자로 렌더링할 컴포넌트나 요소, 두 번쨰 인자로 해당 컴포넌트를 렌더링할 DOM 요소를 전달합니다.**  
+PortalModal을 사용하기 위해서는 마운트할 지점을 만들어 주어야 합니다.  
+```html
+<!-- 어플리케이션 마운트 위치 -->
+<div id="root"></div>
+<!-- 모달이 마운트될 위치 -->
+<div id="modal-root"></div>
+```
+
+# 에러 바운더리에 대해 설명해주세요.
+> 하위 컴포넌트 트리의 어디에서든 자바스크립트 에러를 기록하며 깨진 컴포넌트 트리 대신 폴백UI를 보여주는 React 컴포넌트로 에러 경계는 렌더링 도중 생명주기 메서드 및 그 아래에 있는 전체 트리에서 에러를 잡아냅니다.
+
+**예외**  
+- 이벤트 핸들러
+- 비동기적 코드 (setTimeout 등)
+- 서버 사이드 렌더링
+- 자식이 아닌 경계 자체의 에러
+
+```jsx
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    // Example "componentStack":
+    //   in ComponentThatThrows (created by App)
+    //   in ErrorBoundary (created by App)
+    //   in div (created by App)
+    //   in App
+    logErrorToMyService(error, info.componentStack);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return this.props.fallback;
+    }
+
+    return this.props.children;
+  }
+}
+```
+사용
+```jsx
+<ErrorBoundary fallback={<p>Something went wrong</p>}>
+  <Profile />
+</ErrorBoundary>
+```
 
 # React에서 함수 컴포넌트와 클래스 컴포넌트의 차이
 
