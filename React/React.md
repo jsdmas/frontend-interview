@@ -20,9 +20,11 @@
     - 왜 비동기적으로 동작하나요?
   - HTML과 React의 이벤트 처리 차이점에 대해 설명해주세요.
   - Ref의 용도에 대해 설명해주세요.
+- React 18 버전 업데이트 내용에 대해 말씀해주세요.
 - [virtual DOM에 대해서 아시나요](#virtual-dom에-대해서-아시나요)
   - Virtual DOM 작동 원리에 대해 설명해주세요.
 - [JSX가 뭔가요?](#jsx가-뭔가요)
+- [Client Side Routing에 대해 설명해주세요.](#client-side-routing에-대해-설명해주세요)
 - [엘리먼트와 컴포넌트의 차이에 대해 설명해주세요.](#엘리먼트와-컴포넌트의-차이에-대해-설명해주세요)
 - [리액트에서 컴포넌트를 어떻게 생성하나요?](#리액트에서-컴포넌트를-어떻게-생성하나요)
 - [클래스형 컴포넌트를 사용해보셨나요?](#클래스형-컴포넌트를-사용해보셨나요)
@@ -38,8 +40,12 @@
 - [props와 state의 차이](#props와-state의-차이)<span style="color:red">★★</span>
 - [Props가 컴포넌트간에 전달받는 것이라고 했는데 자식에서 부모로도 전달할 수 있는가](#props가-컴포넌트간에-전달받는-것이라고-했는데-자식에서-부모로도-전달할-수-있는가)<span style="color:red">★★</span>
 - [FLUX에 대해서 아시나요?](#flux에-대해서-아시나요)<span style="color:red">★★</span>
-- [리덕스에 대해서 아시나요?](#리덕스에-대해서-아나요)<span style="color:red">★★</span>
-- [리덕스의 기본 원칙은?](#리덕스의-기본-원칙은-뭔가요)<span style="color:red">★★</span>
+- [⭐ 리덕스에 대해서 아시나요?](#⭐-리덕스에-대해서-아나요)<span style="color:red">★★</span>
+  - ⭐ Redux의 3대 원칙에 대해 설명해주세요.
+  - ⭐ Redux를 사용하는 이유에 대해 설명해주세요.
+  - ⭐ Redux의 장단점에 대해 설명해주세요.
+  - Flux 패턴에 대해 설명해주세요.
+  - Context API와 Redux를 비교해주세요.
 - [React에서 state의 불변성을 유지하라는 말이 있는데 이에 대해 설명해주세요](#react에서-state의-불변성을-유지하라는-말이-있는데-이에-대해-설명해주세요)<span style="color:red">★★</span>
 - [리듀서 내부에서 불변성을 지키는 이유는?](#리듀서-내부에서-불변성을-지키는-이유는)<span style="color:red">★★</span>
 - [리액트 사용시에 부수효과로 인해 생기는 문제점이 있다면?](#리액트-사용시에-부수효과로-인해-생기는-문제점이-있다면)<span style="color:red">★★</span>
@@ -54,9 +60,13 @@
     - ⭐ 함수형 컴포넌트에서 클래스형 컴포넌트의 라이프 사이클 메소드를 비슷하게 사용하는 방법에 대해 설명해주세요.
   - useLayoutEffect
   - useEffect와 useLayoutEffect의 차이점에 대해 설명해주세요.
-  - useMemo
-  - useCallback
+  - ⭐ useCallback
+  - [⭐ useMemo](#⭐-usememo)
+    - ⭐ 리액트에서 메모이제이션을 어떤 방식으로 활용할 수 있나요?
+    - React.memo와 useMemo의 차이에 대해 설명해주세요.
   - useRef
+- 리액트의 렌더링 성능 향상을 위해 어떻게 해야 하나요?
+- [CSS in JS](#css-in-js)
 - [useCallback을 사용할 떄와 사용하지 않고 함수를 선언할 때는 어떤 차이가 있나요?](#usecallback을-사용할-떄와-사용하지-않고-함수를-선언할-때는-어떤-차이가-있나요)
 - [리액트에서 setState는 비동기 동작인가요 동기 동작인가요?](#리액트에서-setstate는-비동기-동작인가요-동기-동작인가요)
 - [리액트의 성능개선 방법에 대해서 설명해주세요](#리액트의-성능개선-방법에-대해서-설명해주세요)
@@ -257,21 +267,7 @@ function foo(){
 
 #### 동기적으로 처리하는방법
 
-1. 함수를 인자로 넣기
-```jsx
-function foo(){
-  const [cnt, setCnt] = useState(0);
-  return(
-    <div>{cnt}</div>
-    <button onClick={()=>{
-      setCnt(cnt => cnt + 1);
-      setCnt(cnt => cnt + 1);
-      setCnt(cnt => cnt + 1);
-      }}>increment</button>
-  )
-}
-```
-2. useEffect의 의존성 배열 사용
+- useEffect의 의존성 배열 사용
 
 ```jsx
 function foo(){
@@ -307,6 +303,35 @@ React
 ## Ref의 용도에 대해 설명해주세요.
 
 react에서 DOM요소나 컴포넌트 인스턴스에 접근하기 위한 방법을 제공합니다.(가상 DOM요소에 접근)  
+
+# React 18 버전 업데이트 내용에 대해 말씀해주세요.
+- React-18v 부터 상태 업데이트(setState)를 하나로 통합해서 배치처리를 한 후 리렌더링을 진행합니다
+- 새로운 서버 사이드 렌더링
+- 동시성 제어 기능
+  - useTransition
+  - 업데이트를 명시적으로 구분하여 상태 업데이트를 진행할 수 있습니다.
+    ```jsx
+    import { useTransition } from 'react';
+    function TransitionTest() {
+        const [isPending, startTransition] = useTransition();
+        
+        function handleChange(e) {
+            const val = e.target.value;
+
+            // 바로 보여줘야 하는(업데이트) 비지니스 로직
+            setDataValue(val);
+
+            // 다른 업데이트에 영향을 줄 수 있는 비지니스 로직을 감싼다.
+            startTransition(() => {
+                // 느린 렌더링 또는 네트워크 로직이 들어 갈 수 있다.
+                setDataQuery(val);
+            });
+        }
+
+    }
+    ```
+- 새로운 Hook
+  - useId
 
 # virtual DOM에 대해서 아시나요
 - [ref](https://velog.io/@yesbb/virtual-dom%EC%9D%98-%EC%84%B1%EB%8A%A5%EC%9D%B4-%EB%8D%94-%EC%A2%8B%EC%9D%80%EC%9D%B4%EC%9C%A0#prerequisite-)
@@ -351,6 +376,26 @@ const element = React.createElement(
 const title = response.potentiallyMaliciousInput;
 const element = <h1>{title}</h1>;
 ```
+
+# Client Side Routing에 대해 설명해주세요.
+
+> 페이지 간의 전환을 클라이언트 측에서 javaScript를 통해 처리하는 것을 말합니다.
+> React-Router를 통한 SPA내 화면 전환 및 주소 값 변경은 서버가 아니라 클라이언트 측에서 일어나기 때문에 Client Side Routing 이라고 합니다.
+
+**장점**
+- 주소가 변경될때마다 매번 서버에서 페이지를 받아오지 않아도 되기 때문에 서버와 클라이언트 간의 트래픽이 감소한다는 이점이 있습니다.
+**단점**
+- SEO 최적화에 불리합니다.
+  - 라우팅시 콘텐츠 구성이 완료된 HTML을 서버에서 받아오는 것이 아닌 화면 구성에 필요한 모든 HTML을 클라이언트 측에서 처리하기 때문입니다.
+
+# React에서 컴포넌트 A가 사용하는 CSS파일과 컴포넌트 B가 사용하는 CSS파일의 선택자가 겹치는 이유가 뭘까요?
+
+기본적으로 일반 css파일을 import 할 시 전체 모듈에 적용 됩니다.(글로벌 네임 스페이스)
+![](https://github.com/jsdmas/frontend-interview/assets/105098581/46104817-a425-453d-8772-3c4b39f23f75)
+이로인해 선택자가 겹치며 의도한바와 다르게 실행됩니다.  
+해결방법은 아래와 같습니다.
+1. css-module 사용 (ex : Main.module.css)
+2. styled-component와 같은 라이브러리 사용
 
 # 엘리먼트와 컴포넌트의 차이에 대해 설명해주세요.
 
@@ -628,15 +673,84 @@ class ErrorBoundary extends React.Component {
 
 반면 Flux 패턴은 사용자 입력을 기반으로 Action을 만들고 Action을 Dispatcher에 전달하여 Store (Model)의 데이터를 변경한 뒤 View에 반영하는 단방향의 흐름으로 애플리케이션을 만드는 아키텍쳐입니다.  
 Flux 패턴은 facebook에서 MVC의 문제를 해결할 목적으로 고안되었습니다.
-# 리덕스에 대해서 아나요?
-리덕스는 상태관리 라이브러리 중 하나로 여러 가지 상태관리 라이브러리 중 가장 많이 사용되고 있습니다.  
-리덕스는 store(스토어)라는 변수를 이용하여 전역 상태관리를 하게 됩니다.  
-전역으로 상태를 관리하기 때문에 props <-> state를 통해 부모 컴포넌트에서 자식 컴포넌트로, 자식의 자식 컴포넌트로 내려주지 않아도 사용할 수 있습니다.  
 
-# 리덕스의 기본 원칙은 뭔가요?
-1. 응용 프로그램의 전역 상태는 단일 저장소 내의 트리에 저장됩니다
-2. 상태(state)는 읽기 전용입니다.
-3. 순수 함수에 의해서 변경되어야 합니다.
+# ⭐ 리덕스에 대해서 아나요?
+
+> 리덕스는 상태관리 라이브러리 중 하나로 store(스토어)라는 변수를 이용하여 전역 상태관리를 하게 됩니다. 
+
+## ⭐ Redux의 3대 원칙에 대해 설명해주세요.
+
+1. Single source of truth
+   - 동일한 데이터는 항상 같은 곳에서 가지고 온다.
+   - 즉, 스토어라는 하나뿐인 데이터 공간이 있다는 의미입니다.
+2. State is read-only 
+   - react에서는 setState 메서드를 활용해야만 상태 변경이 가능합니다.
+   - 리덕스에서도 액션이라는 객체를 통해서만 상태를 변경할 수 있습니다.
+3. Changes are made with pure funtions
+   - 변경은 순수함수로만 가능합니다.
+   - 리듀서와 연관되는 개념입니다.
+   - Store - Action - Reducer
+
+![](https://github.com/jsdmas/frontend-interview/assets/105098581/e12d1b84-c3da-4d23-9f6e-1da2c9c01739)
+
+### 스토어 (Store)
+> 상태가 관리되는 오직 하나의 공간
+- 컴포넌트와는 별개로 스토어라는 공간이 있어서 그 스토어 안에 앱에서 필요한 상태를 담습니다.
+- 컴포넌트에서 상태 정보가 필요할 때 스토어에 접근합니다.
+
+### 액션 (Actions)
+> 앱에서 스토어에 운반할 데이터를 말합니다. (주문서) 자바스크립트 객체 형식으로 되어있습니다.
+
+### 리듀서 (Reducer)
+- Action을 Store에 바로 전달하는 것이 아닙니다.
+- Action을 Reducer에 전달해야합니다.
+- Reducer가 주문을 보고 Store의 상태를 업데이트하는 것입니다.
+- Action을 Reducer에 전달하기 위해서는 dispatch()메소드를 사용해야합니다.
+
+1. Action 객체가 dispatch() 메서드에 전달된다.
+2. dispatch(액션)를 통해 Reducer를 호출한다.
+3. Reducer는 새로운 Store를 생성한다.
+
+#### 왜 이러한 공식을 따르는가?
+
+> 이유는 한 방향으로 데이터가 흘러가야 하기 때문입니다.
+
+![](https://github.com/jsdmas/usePublicApi-vanillaJS/assets/105098581/8b8307bd-4456-4240-97c4-c7c7dceb1f7b)
+
+
+
+## ⭐ Redux를 사용하는 이유에 대해 설명해주세요.
+
+- 전역적인 state 관리를 위해서
+- 서버사이드 렌더링
+- 테스팅이 용이
+
+## ⭐ Redux의 장단점에 대해 설명해주세요.
+
+- 장점
+  - 상태를 쉽게 예측가능 하게 하여 유지보수 측면에서 긍정적이다.
+  - Redux-saga, Redux-thunk 와 같은 미들웨어를 통해 비동기작업을 좀 더 디테일하고, 편한 컨트롤을 할 수 있다.
+- 단점
+  - 리덕스를 유용하게 쓰려면 많은 패키지를 추가해야합니다.
+  - 보일러플레이트(어떤 일을 하기 위해 꼭 작성해야 하는 코드)를 많이 요구합니다.
+  - 스토어 환경 설정이 복잡합니다.
+
+## Flux 패턴에 대해 설명해주세요.
+- [ref](https://velog.io/@andy0011/Flux-%ED%8C%A8%ED%84%B4%EC%9D%B4%EB%9E%80)
+
+> 사용자 입력을 기반으로 Action을 만들고 Action을 Dispatcher에 전달하여 Store(Model)의 데이터를 변경한 뒤 View에 반영하는 단방향의 흐름으로 애플리케이션을 만드는 아키텍쳐입니다. 
+
+![](https://github.com/jsdmas/usePublicApi-vanillaJS/assets/105098581/bc10be08-063d-49d8-b83f-14be22b758a3)
+
+## Context API와 Redux를 비교해주세요.
+
+| Context API                                                                                                      | Redux                                                                   |
+| ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| React 내장                                                                                                       | 라이브러리                                                              |
+| Context 객체를 이용해 전역관리                                                                                   | 중앙 집중화된 저장소애서 전역관리                                       |
+| 상대적으로 간단한 상태 관리에 용이                                                                               | 대규모 어플리케이션 & 복잡한 상태관리가 필요할시 사용                   |
+| Context를 사용하여 상태를 공유하고, Context.Provider와 Context.Consumer 컴포넌트를 사용하여 상태를 제공하고 소비 | 액션, 리듀서, 스토어와 같은 개념을 사용하여 상태를 변경하고 관리합니다. |
+
 
 # React에서 state의 불변성을 유지하라는 말이 있는데 이에 대해 설명해주세요
 - 이는 메모리 영역에서의 직접적인 변경이 불가능 하다는 뜻입니다.
@@ -881,28 +995,7 @@ useEffect(()=>{
   - **동기적(synchrouns)**으로 실행됩니다.
   - paint가 되기 전 실행되기 때문에 dom을 조작하는 코드가 존재하더라도 사용자는 **깜빡임을 경험하지 않습니다.**
 
-## useMemo
-- Memoized value를 return 하는 Hook
-  - Memoization : 비용이 높거나 연산량이 많은 호출 결과를 저장해두었다가 같은 입력값으로 함수를 호출시 새로 함수를 호출하지 않고 이전에 저장해둔 함수를 반환하는 것
-- 리렌더링을 최적화하는데 도움이 됩니다.
-
-```jsx
-// Memoized value를 생성하는 create 함수와 의존성 배열을 받는다. 
-const memoizedValue = useMemo(
-  ()=>{
-    // 연산량이 높은 작업을 수행하여 결과를 반환
-    return computeExpensiveValue(의존성 변수1, 의존성 변수2);
-  },
-  [의존성 변수1, 의존성 변수2]
-)
-```
-- useMemo로 전달된 함수는 렌더링이 일어나는 동안 실행됩니다. 
-  - 일반적으로 렌더링이 일어나는 동안 실행되선 안되는 작업을 useMemo함수에 넣어선 안됩니다.
-  - ex : 서버에서 데이터 받아오기, 수동으로 DOM 변경하기 등
-- 의존성 배열을 넣지 않을 경우, 매 렌더링마다 함수가 실행됩니다. 
-- 의존성 배열이 빈 배열일 경우, 컴포넌트 마운트 시에만 호출됩니다.
-
-## useCallback
+## ⭐ useCallback
 - useMemo와 비슷하지만 값이 아닌 `함수`를 반환합니다. 
 - 의존성 배열의 값이 바뀐 경우에만 함수를 새로 정의하고 return 해줍니다.
 
@@ -934,6 +1027,40 @@ function foo(props){
 ```
 위의 예시처럼 useCallback 사용시 부모 컴포넌트가 바뀌지 않으면 부모컴포넌트에서 handleClick이벤트를 넘겨줘도 handleClick이 바뀌지 않으면 자식 컴포넌트도 재렌더링이 일어나지 않게됩니다.
 
+## ⭐ useMemo
+- Memoized value를 return 하는 Hook
+  - Memoization : 비용이 높거나 연산량이 많은 호출 결과를 저장해두었다가 같은 입력값으로 함수를 호출시 새로 함수를 호출하지 않고 이전에 저장해둔 함수를 반환하는 것
+- 리렌더링을 최적화하는데 도움이 됩니다.
+
+```jsx
+// Memoized value를 생성하는 create 함수와 의존성 배열을 받는다. 
+const memoizedValue = useMemo(
+  ()=>{
+    // 연산량이 높은 작업을 수행하여 결과를 반환
+    return computeExpensiveValue(의존성 변수1, 의존성 변수2);
+  },
+  [의존성 변수1, 의존성 변수2]
+)
+```
+- useMemo로 전달된 함수는 렌더링이 일어나는 동안 실행됩니다. 
+  - 일반적으로 렌더링이 일어나는 동안 실행되선 안되는 작업을 useMemo함수에 넣어선 안됩니다.
+  - ex : 서버에서 데이터 받아오기, 수동으로 DOM 변경하기 등
+- 의존성 배열을 넣지 않을 경우, 매 렌더링마다 함수가 실행됩니다. 
+- 의존성 배열이 빈 배열일 경우, 컴포넌트 마운트 시에만 호출됩니다.
+
+### ⭐ 리액트에서 메모이제이션을 어떤 방식으로 활용할 수 있나요?
+
+리액트에서 제공하는 메모이제이션 기법은 아래 메소들을 통해 사용할 수 있습니다.
+> React.memo(컴포넌트), useCallback(()=>{함수 그 자체}), useMemo(()=>함수의 리턴 값)
+
+### React.memo와 useMemo의 차이에 대해 설명해주세요.
+
+- React.memo
+  - 함수형 컴포넌트를 메모이제이션하여 동일한 props로 재렌더링되었을 떄 이전에 렌더링된 결과를 재사용하는 데 사용됩니다.
+  - 컴포넌트의 인자(props)가 변경되지 않으면 이전에 렌더링된 결과를 재사용하여 불필요한 재렌더링을 방지합니다.
+
+주요 차이점은 React.memo는 `컴포넌트를 메모이제이션`하고 React.useMemo는 `값을 메모이제이션`합니다.
+
 ## useRef
 - javascript에서 DOM요소를 조작하기 위해 querySelector나 getElementById등을 사용했다면, 리액트에서는 useRef 훅 함수를 사용합니다.
 - Reference를 사용하기 위한 Hook 
@@ -959,6 +1086,33 @@ function Example(){
     );
 }
 ```
+
+# 리액트의 렌더링 성능 향상을 위해 어떻게 해야 하나요?
+
+1. useMemo, useCallback, memo 사용
+2. 컴포넌트 매핑시 key값을 index로 사용하지 않기
+   - 예상치 못한 문제 발생
+
+# CSS in JS
+
+> 말그대로 javaScript 코드에서 css를 작성하는 방식을 말합니다.
+
+다음과 같은 문제를 해결하기 위해 나온 기술입니다.
+- Global namespace: 글로벌 공간에 선언된 이름의 명명 규칙 필요
+- Dependencies: CSS간의 의존 관계를 관리
+- Dead Code Elimination: 미사용 코드 검출
+- Minification: 클래스 이름의 최소화
+- Sharing Constants: JS와 CSS의 상태 공유
+- Non-deterministic Resolution: CSS 로드 우선 순위 이슈
+- Isolation: CSS와 JS의 상속에 따른 격리 필요 이슈
+  
+대표적인 라이브러리로는 styled-component 입니다.  
+  
+**장점**
+1. 컴포넌트 단위 스타일링
+2. 스타일 재사용으로 유지보수 up
+
+
 # useCallback을 사용할 떄와 사용하지 않고 함수를 선언할 때는 어떤 차이가 있나요?
 함수를 선언할 때 `useCallback`을 사용하지 않으면 매번 컴포넌트가 리렌더링 될때마다 함수가 새로 생성됩니다.  
 반면에 `useCallback`을 사용하면 의존성 배열 안의 값이 변경되지 않는 한 함수를 재사용 할 수 있습니다.  
