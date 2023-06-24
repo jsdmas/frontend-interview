@@ -5,6 +5,20 @@
 
 - [React](#react)
   - React의 원리, 특징, 장단점이 무엇인가요?
+  - state
+  - React에서 State를 어떻게 관리하나요?
+  - Props에 대해 설명해주세요.
+    - ⭐ Props Drilling에 대해 설명해주세요.
+    - ⭐ Props Drilling을 어떻게 해결할 수 있나요?
+    - ⭐ Key Props를 사용하는 이유에 대해 설명해주세요.
+  - 데이터를 자식에서 부모로도 전달할 수 있나요?
+  - Props와 State의 차이에 대해 설명해주세요.
+  - 왜 state를 직접 바꾸지 않고 setState (useState)를 사용해야 하나요?
+  - React 에서 상태 변화가 생겼을 때, 변화를 어떻게 알아채는지에 대해 설명해주세요.
+  - React에서 State의 불변성은 어떻게 유지할 수 있나요?
+  - setState는 동기적으로 동작하나요? 아니면 비동기적으로 동작하나요?
+    - 왜 비동기적으로 동작하나요?
+  - HTML과 React의 이벤트 처리 차이점에 대해 설명해주세요.
 - [virtual DOM에 대해서 아시나요](#virtual-dom에-대해서-아시나요)
   - Virtual DOM 작동 원리에 대해 설명해주세요.
 - [JSX가 뭔가요?](#jsx가-뭔가요)
@@ -26,13 +40,15 @@
   - 부수 효과를 일으키지 않는 함수 (순수 함수)
   - 요약
 - [⭐ 컴포넌트의 라이프 사이클 메서드](#⭐-컴포넌트의-라이프-사이클-메서드)<span style="color:red">★★</span>
+- Pure Component
 - [⭐ Hooks](#⭐-hooks)<span style="color:red">★★</span>
   - useState
   - useEffect
     - ⭐ 함수형 컴포넌트에서 클래스형 컴포넌트의 라이프 사이클 메소드를 비슷하게 사용하는 방법에 대해 설명해주세요.
+  - useLayoutEffect
+  - useEffect와 useLayoutEffect의 차이점에 대해 설명해주세요.
   - useMemo
   - useCallback
-    - useMemo, useCallback 의 차이점 <span style="color:red">★★</span>
   - useRef
 - [useCallback을 사용할 떄와 사용하지 않고 함수를 선언할 때는 어떤 차이가 있나요?](#usecallback을-사용할-떄와-사용하지-않고-함수를-선언할-때는-어떤-차이가-있나요)
 - [리액트에서 setState는 비동기 동작인가요 동기 동작인가요?](#리액트에서-setstate는-비동기-동작인가요-동기-동작인가요)
@@ -76,6 +92,211 @@ React는 페이스북에서 개발한 자바스크립트 `라이브러리로`, �
 - 단점
   - 복잡한 상태 관리
   - 초기 로딩시간이 길다
+
+## State
+> state는 react에서 component의 **변경 가능한 데이터**를 의미합니다.
+- state는 그냥 javaScript 객체입니다.
+- 사전에 미리 정해진 것이 아닌 개발자가 state를 정의합니다.
+- 렌더링이나 데이터 흐름에 사용되는 값만 state에 포함시켜야합니다.
+  - state가 변경될 경우 component가 재렌더링 되기 떄문
+  - 관련없는 값을 포함하면 불필요한 경우 컴포넌트가 재렌더링이 되서 성능저하가 발생한다.
+- state는 직접 수정하면 안됩니다.
+  - 직접 수정하게되면 개발자가 의도한대로 작동하지 않기떄문입니다.
+## React에서 State를 어떻게 관리하나요?
+
+state를 관리하는 이유는
+1. 동적인 UI 업데이트
+2. 사용자 상호작용 처리
+3. 데이터 관리
+
+관리방법은 아래와 같습니다.
+
+- class component
+  - `this.state`객체를 사용하여 상태를 초기화합니다.
+  - `this.setState()`메서드를 사용하여 상태를 업데이트합니다.
+  - `setState`는 이전 상태를 변경하지 않고, 새로운 상태를 생성하는 함수를 전달하는 방식으로 사용합니다. (불변성 유지)
+    - 상태를 직접 변경하게 되면 react가 변경 사항을 감지하지 못하고 적절한 렌더링이 이루어지지 않을 수도 있습니다.
+- function component
+  - `useState`훅을 사용하여 상태를 초기화하고, 배열 형태의 반환값으로 현재 상태와 상태를 업데이트하는 함수를 받습니다.
+  - 상태 업데이트 시에는 업데이트 함수를 호출합니다.
+
+## Props에 대해 설명해주세요.
+
+> properties의 줄임말로, 어떠한 값을 컴포넌트에게 전달해줘야 할 떄 props를 사용합니다.
+
+properties : class나 Object의 속성을 나타내는 변수나 상수를 의미합니다.
+
+```jsx
+function App(){
+  return(
+    <Hello name="world" />
+  );
+}
+
+function Hello(props){
+  return(
+    <h1>Hello , {props.name}!</h1>
+  );
+}
+```
+
+- 컴포넌트에게 전달되는 props는 파라미터(함수나 클래스의 선언부에 있는 변수)를 통해 조회할 수 있습니다.  
+- props는 `객체` 형태로 전달됩니다.
+
+### ⭐ Props Drilling에 대해 설명해주세요.
+
+> props를 오로지 하위 컴포넌트로 전달하는 용도로만 쓰이는 컴포넌트들을 거치면서 React Component 트리의 한 부분에서 다른 부분으로 데이터를 전달하는 과정입니다.
+
+코드를 읽을떄 prop 추적이 힘들어지며 유지보수도 어려워집니다.
+
+### ⭐ Props Drilling을 어떻게 해결할 수 있나요?
+
+1. 전역 상태관리 라이브러리 사용
+   - `redux`, `recoil`, `Mobx`, `context API`
+2. 컴포넌트 분리
+
+### ⭐ Key Props를 사용하는 이유에 대해 설명해주세요.
+> key는 React가 어떤 항목을 변경, 추가 또는 삭제할지 식별하는 것을 돕는 역할을 합니다.
+- key는 엘리먼트에 안정적인 고유성을 부여하기 위해 배열 내부의 엘리먼트에 지정해야 합니다.  
+- 만약 key props를 부여하지 않는다면 React는 어떤 항목이 변경, 추가, 삭제되었는지 식별하는데 어려움을 겪게 됩니다.
+  - 해당 이유로 다시 한번 전체를 리렌더링 하게됩니다.
+- 즉, **key props를 주었을 때는 변경된 부분을 식별해 필요한 부분만 리렌더링 해줍니다.**
+- **key props를 주지 않는다면 불필요한 리렌더링이 발생하게 됩니다.**
+
+## 데이터를 자식에서 부모로도 전달할 수 있나요?
+
+**콜백 함수**를 통해 가능합니다.  
+부모 컴포넌트는 자식 컴포넌트에게 콜백 함수를 props로 전달한 후 자식 컴포넌트는 해당 콜백함수를 호출하여 데이터를 부모 컴포넌트로 전달할 수 있습니다.
+```jsx
+function ParentComponent(){
+  const foo = (data) => {
+    console.log(data);
+  }
+  return(
+    <ChildComponent foo={foo}/>
+  )
+}
+
+function ChildComponent({foo}){
+  const [data,setData] = useState(2);
+  // 부모 component의 callback함수에 data를 넣는다.
+  foo(data);
+  return(
+    <div>Child</div>
+  )
+}
+
+```
+
+## Props와 State의 차이에 대해 설명해주세요.
+
+1. React 이벤트 이름은 소문자 대신 camelCase를 사용하여 표시합니다.
+2. JSX에 문자열 대신 함수를 전달합니다.
+
+html
+```html
+<button onclick="activateButton()">클릭하세요</button>
+```
+React
+```jsx
+<button onClick={activateButton}>클릭하세요</button>
+```
+
+### Props(properties)
+- 컴포넌트 외부에서 컴포넌트에 전달되는 데이터입니다.
+- 읽기 전용(read-only)이며, 부모 컴포넌트에서 자식 컴포넌트로 전달됩니다.
+- 속성이나 설정값으로 사용되며, 컴포넌트 내부에서 변경되지 않습니다.
+
+### State
+- 컴포넌트 내부에서 관리되는 데이터입니다.
+- 컴포넌트의 상태를 나타내며, 컴포넌트 내부에서 변경 가능합니다.
+- 컴포넌트의 동작과 렌더링에 영향을 줍니다.
+
+## 왜 state를 직접 바꾸지 않고 setState (useState)를 사용해야 하나요?
+
+1. 불변성(immutable)유지 : 새로운 상태를 생성하고 업데이트해야 React에서 상태 변경 여부를 판단하고 컴포넌트를 필요한 경우에만 렌더링합니다.
+2. 직접 state를 수정하면 react는 render함수를 호출하지 않습니다.
+
+## React 에서 상태 변화가 생겼을 때, 변화를 어떻게 알아채는지에 대해 설명해주세요.
+
+- state 객체의 주소값이 변경되면 상태가 변화되었다는 것을 알아차립니다.(얕은 비교를 통해 상태변화 감지)
+- 상태를 업데이트할 떄 `useState` 훅의 setState 함수를 이용하면 react는 내부적으로 이전 상태와 새로운 상태를 비교합니다.
+- **react는 이전 상태 객체와 새로운 상태 객체의 주소값을 비교하여 상태의 변화를 감지합니다.**
+
+만약 이전 상태 객체와 새로운 상태 객체의 주소값이 다르다면, React는 상태가 변경되었다고 판단하고 해당 컴포넌트를 리렌더링 합니다.  
+이떄, Virtual DOM을 사용하여 실제 DOM과 비교하고, 변경된 부분만 실제 DOM으로 반영합니다.
+
+
+## React에서 State의 불변성은 어떻게 유지할 수 있나요?
+
+1. useState 훅을 사용하여 상태를 업데이트 합니다.
+2. 객체나 배열의 경우 직접 수정하지 않고 새롭게 생성하여 사용합니다.
+
+## setState & useState 는 동기적으로 동작하나요? 아니면 비동기적으로 동작하나요?
+
+> 비동기적으로 동작합니다.
+
+### 왜 비동기적으로 동작하나요?
+
+> 하나의 페이지나 컴포넌트 내에도 수많은 상태값들이 존재합니다. 만약 이 상태가 하나하나 바뀔 때마다 화면을 리렌더링 한다면 문제가 생길수도 있습니다.
+> 때문에 리액트는 성능 향상을 위해서 setState를 연속 호출하면 배치 처리하여 한번에 렌더링하도록 하였습니다.
+> 아무리 많은 setState가 연속적으로 사용되더라도 배치 처리에 의해서 한 번의 렌더링으로 최신 상태를 유지하는 것입니다.
+
+```jsx
+function foo(){
+  const [cnt, setCnt] = useState(0);
+  return(
+    <div>{cnt}</div>
+    // setCnt가 아무리 많아도 1씩 증가된다.
+    <button onClick={()=>{
+      setCnt(cnt + 1);
+      setCnt(cnt + 1);
+      setCnt(cnt + 1);
+      }}>increment</button>
+  )
+}
+```
+#### 배치(batch)
+> React가 더나은 성능을 위해 여러개의 state 업데이트를 하나의 리렌더링으로 묶는 것을 의미합니다.
+> 16ms 동안 변경된 상태 값들을 하나로 묶습니다.
+
+#### 동기적으로 처리하는방법
+
+1. 함수를 인자로 넣기
+```jsx
+function foo(){
+  const [cnt, setCnt] = useState(0);
+  return(
+    <div>{cnt}</div>
+    <button onClick={()=>{
+      setCnt(cnt => cnt + 1);
+      setCnt(cnt => cnt + 1);
+      setCnt(cnt => cnt + 1);
+      }}>increment</button>
+  )
+}
+```
+2. useEffect의 의존성 배열 사용
+
+```jsx
+function foo(){
+  const [cnt, setCnt] = useState(0);
+  // cnt값이 업데이트 되면 바로 console.log 함수가 실행되므로 업데이트된 state값을 바로 볼 수 있습니다.
+  useEffect(()=>{
+    console.log(cnt);
+  },[cnt]);
+  return(
+    <div>{cnt}</div>
+    <button onClick={()=>{
+      setCnt(cnt => cnt + 1);
+      }}>increment</button>
+  )
+}
+```
+
+
+## HTML과 React의 이벤트 처리 차이점에 대해 설명해주세요.
+
 
 # virtual DOM에 대해서 아시나요
 - [ref](https://velog.io/@yesbb/virtual-dom%EC%9D%98-%EC%84%B1%EB%8A%A5%EC%9D%B4-%EB%8D%94-%EC%A2%8B%EC%9D%80%EC%9D%B4%EC%9C%A0#prerequisite-)
@@ -373,8 +594,26 @@ componentDidUpdate(prevProps, prevState, snapshot) {
 #### componentWillUnmount
 `componentWillUnmount` 는 컴포넌트가 화면에서 사라지기 직전에 호출됩니다.
 
+
+# Pure Component
+
+- React.component는 shouldComponentUpdate를 따로 설정해주지 않은 경우 항상 true를 반환합니다.
+  - 즉, `setState`가 실행되면 state, props의 변경 여부를 신경쓰지 않고 무조건적으로 컴포넌트를 업데이트 합니다.
+- class형 컴포넌트에서 성능을 개선하기 위해서 최대한 리렌더링을 줄이기 위한 컴포넌트가 `PureComponent`입니다.
+- pureComponent는 `shouldComponentUpdate()`안에 `얕은비교`가 적용됩니다.
+  - 얕은비교 (shallow-compare)
+  - 변수와 문자열에서는 값을 비교합니다.
+  - 객체에서는 reference 값을 비교합니다.
+
 # ⭐ Hooks
-Hook은, 클래스를 작성하지 않고도 함수 컴포넌트에서도 상태값과 여러 React의 기능을 사용할 수 있게 해줍니다.
+- Hook은, 클래스를 작성하지 않고도 함수 컴포넌트에서도 상태값과 여러 React의 기능을 사용할 수 있게 해줍니다.
+- Hook은 무조건 **최상위 레벨**(react 함수 컴포넌트의 최상위 레벨)에서만 호출해야 합니다.
+  - 반복문, 조건문 중첩된 함수 안에서는 호출할 수 없습니다.
+  - Hook은 컴포넌트가 렌더링 될 때마다 매번 같은 순서로 호출되어야 합니다.
+    - 이렇게 해야 react가 다수의 useState Hook과 useEffect Hook의 호출에서 컴포넌트의 State를 올바르게 관리할 수 있습니다.
+- **리액트 함수 컴포넌트에서만** 호출 가능합니다.
+- eslint-plugin-react-hooks : 훅의 규칙을 따르는지 아닌지를 판별하여 코딩에 도움을 줍니다.
+- 여러 개의 컴포넌트에서 하나의 Custom Hook을 사용할 때 컴포넌트 내부에 있는 모든 state와 effects는 모두 분리되어 있습니다.
 
 ```jsx
 function Cunter(props){
@@ -440,43 +679,89 @@ useEffect(()=>{
     };
 })
 ```
+
+## useLayoutEffect
+- useEffect와 동일하지만, 렌더링 후 layout과 paint 전에 **동기적**으로 실행됩니다.
+- 때문에 설령 DOM을 조작하는 코드가 존재하더라도, 사용자는 깜빡임을 보지 않습니다.
+
+## useEffect와 useLayoutEffect의 차이점에 대해 설명해주세요.
+
+- useEffect
+  - 컴포넌트들이 render와 paint된 후 실행됩니다.
+  - **비동기적(asynchronus)**으로 실행됩니다.
+  - paint된 후 실행되기 때문에 useEffect내부에 dom에 영향을 주는 코드가 있을 경우 사용자 입장에서는 **화면의 깜빡임**을 보게됩니다.
+- useLayoutEffect
+  - 컴포넌트들이 render된 후 실행되며, 그 이후에 paint됩니다.
+  - **동기적(synchrouns)**으로 실행됩니다.
+  - paint가 되기 전 실행되기 때문에 dom을 조작하는 코드가 존재하더라도 사용자는 **깜빡임을 경험하지 않습니다.**
+
 ## useMemo
-연산의 결과값을 저장해두고 동일한 연산이 반복될 때 이전에 저장된 값을 재사용하는 것입니다.  
-이를 통해 리렌더링을 최적화하는데 도움이 됩니다.  
+- Memoized value를 return 하는 Hook
+  - Memoization : 비용이 높거나 연산량이 많은 호출 결과를 저장해두었다가 같은 입력값으로 함수를 호출시 새로 함수를 호출하지 않고 이전에 저장해둔 함수를 반환하는 것
+- 리렌더링을 최적화하는데 도움이 됩니다.
+
 ```jsx
-import React, {useMemo} from "react";
-function Example({ a, b }){
-    const memoizedValue = useMemo(()=>{
-        // caclulation
-        return a+ b;
-    }, [a, b]);
-    return <div>{memoizedValue}</div>
-}
+// Memoized value를 생성하는 create 함수와 의존성 배열을 받는다. 
+const memoizedValue = useMemo(
+  ()=>{
+    // 연산량이 높은 작업을 수행하여 결과를 반환
+    return computeExpensiveValue(의존성 변수1, 의존성 변수2);
+  },
+  [의존성 변수1, 의존성 변수2]
+)
 ```
-위의 예제는 useMemo가 a + b 라는 연산의 결과값을 저장하고 있습니다.  
-a or b 의 값이 변경되지 않으면 이전에 저장된 값을 재사용하게 됩니다.  
+- useMemo로 전달된 함수는 렌더링이 일어나는 동안 실행됩니다. 
+  - 일반적으로 렌더링이 일어나는 동안 실행되선 안되는 작업을 useMemo함수에 넣어선 안됩니다.
+  - ex : 서버에서 데이터 받아오기, 수동으로 DOM 변경하기 등
+- 의존성 배열을 넣지 않을 경우, 매 렌더링마다 함수가 실행됩니다. 
+- 의존성 배열이 빈 배열일 경우, 컴포넌트 마운트 시에만 호출됩니다.
 
 ## useCallback
-useMemo와 상당히 비슷한 함수로, 주로 렌더링 성능을 최적화 해야하는 상황에서 사용합니다.  
-만들어 놨던 함수를 재사용 할 수 있습니다.  
-useMemo는 값을 메모이제이션하고 useCallback은 함수를 메모이제이션합니다.  
+- useMemo와 비슷하지만 값이 아닌 `함수`를 반환합니다. 
+- 의존성 배열의 값이 바뀐 경우에만 함수를 새로 정의하고 return 해줍니다.
+
 ```jsx
-import React, {useCallback} from "react";
-function Example({ onClick }){
-    const memoizedOnClick = useCallback(()=>{
-        onClick();
-    }, [onClick]);
-    return <button onClick={memoizedOnClick}>Click</button>;
+const memoizedCallback = useCallback(
+  ()=>{
+    doSomething(의존성 변수1, 의존성 변수2)
+  },
+  [의존성 변수1, 의존성 변수2]
+  )
+```
+- useCallback 함수를 정의하지 않고 컴포넌트 내에 함수를 정의한다면 매번 렌더링이 일어날 때마다 함수가 새로 정의됩니다.
+
+```jsx
+function foo(props){
+  const [count, setCount] = useState(0);
+  // 컴포넌트가 마운트 될 때만 함수가 정의됨
+  const handleClick = useCallback((event) => {
+    // 클릭 이벤트 처리
+  },[]);
+  
+  return(
+    <div>
+      <button onClick={()=>setCount(count+1)}>{count}</button>
+      <ChildComponent handleClick={handleClick}/>
+    </div>
+  )
 }
 ```
+위의 예시처럼 useCallback 사용시 부모 컴포넌트가 바뀌지 않으면 부모컴포넌트에서 handleClick이벤트를 넘겨줘도 handleClick이 바뀌지 않으면 자식 컴포넌트도 재렌더링이 일어나지 않게됩니다.
+
 ## useRef
 - javascript에서 DOM요소를 조작하기 위해 querySelector나 getElementById등을 사용했다면, 리액트에서는 useRef 훅 함수를 사용합니다.
-- useRef는 `.current`프로퍼티에 변경가능한 값을 담고있는 객체입니다.
-- `.current`프로퍼티를 변경해도 리렌더링을 유발하지는 않습니다. ref객체 안의 값은 리액트 생명주기에 독립적이기 때문입니다.  
+- Reference를 사용하기 위한 Hook 
+  - Reference : 특정 컴포넌트에 접근할 수 있는 객체
+- refObject.current
+  - current : 현재 참조하고 있는 Element (변경가능)
+  - `.current`프로퍼티를 변경해도 리렌더링을 유발하지는 않습니다. ref객체 안의 값은 리액트 생명주기에 독립적이기 때문입니다.
+  - 변경가능한 current라는 속성을 가진 하나의 상자라고 생각하면 편합니다.
+- useRef훅은 내부의 데이터가 변경되었을 떄 별도로 알리지 않습니다. (재렌더링 X)
 
 ```jsx
 function Example(){
-    const inputEl = useRef(null);
+    // 초기값이 null인 ref객체 반환 
+    const inputEl = useRef(null); // 컴포넌트의 lifeTime 전체에 걸쳐서 유지됩니다. (마운트 해제 전까지 계속 유지)
     const handleClick = () => {
         inputEl.current.focus();
     };
