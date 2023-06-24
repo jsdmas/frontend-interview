@@ -73,6 +73,12 @@
 - [컴포넌트에서 이벤트를 실행시키기 위해서는 어떻게 핸들링해야 하나요?](#컴포넌트에서-이벤트를-실행시키기-위해서는-어떻게-핸들링해야-하나요)
 - [SEO가 뭔가요](#seo가-뭔가요)
   - TTV, TTI
+- [React-Query](#react-query)
+  - React-Query의 등장 배경과 장점에 대해 설명해주세요.
+- [Recoil](#recoil)
+ - Recoil에서 Loadable의 개념에 대해 설명해주세요.
+ - Recoil에서 비동기로 데이터를 받아올 때 State를 어떻게 관리하셨나요?
+ - ⭐ Redux와 Recoil에 대해 비교 설명해주세요. (개념, 장단점)
 
 </details>
 
@@ -1165,3 +1171,100 @@ CSR은 사용자에게 보여짐과 동시에 모든 html과 js를 불러온 상
 
 요즘에는 SSR, CSR 뿐만 아니라 SSG(Static Site Generation)또한 렌더링 방법으로 등장하였습니다. SSG는 리액트를 예로 들면 `Gatsby`또는 `Next`와 같은 라이브러리를 추가적으로 사용하여 렌더링을 하는 것인데, 웹 페이지를 정적으로 미리 생성해두고, 서버에 배포해놓는 것입니다.  
 SSG에서도 자바스크립트 파일을 html파일과 함께 가지고 있을 수 있기 때문에, 동적인 요소도 충분히 추가할 수 있습니다. Next 에서는 ssr 뿐만 아니라, static generation, no pre-rendering, pre-rendering상태를 모두 지원하기 때문에 리액트로 작업을 계속한다면 next.js를 배워보는 것도 매우 효과적일 겁니다.  
+
+# React-Query
+
+> 서버 데이터 패칭(fetching), 캐싱(caching), 동기화, 에러핸들링 및 업데이트(updating) 작업을 편하게 만들어주는 라이브러리입니다.
+
+## React-Query의 등장 배경과 장점에 대해 설명해주세요.
+
+리액트는 서버에서 데이터를 가져오거나, 업데이트하는 명확한 방법을 제공하지 않기 때문에, 개발자들이 이를 직접 처리해주어야 합니다.  
+이를 해결하기 위해 react-query를 사용함으로써 서버, 클라이언트 데이터를 분리하는데 사용됩니다.  
+  
+**장점**  
+- 코드의 양이 비교적 적고 단순하여 유지 보수가 용이합니다.
+- 캐싱을 구현하기 쉽습니다.
+- 동일한 데이터에 대한 중복 요청을 제거
+- 오래된 데이터의 상태를 파악하여 updating 지원
+- 비동기 과정을 선언적으로 관리
+
+## Recoil
+
+> 페이스북이 만든 react전용 상태 관리 라이브러리입니다.
+> 상태를 선언적으로 관리합니다.
+> recoil은 각각의 전역 상태에 대한 atom이 생성되고 해당 상태를 구독하는 구성 요소만 리렌더링 됩니다. (불필요한 리렌더링 방지)
+
+### atom
+![](https://github.com/jsdmas/usePublicApi-vanillaJS/assets/105098581/8c9f4b16-5f89-4289-830d-aa96026370f7)
+- atom은 상태의 단위입니다.
+- atom이 업데이트 되면, 해당 atom을 구독하고 있던 모든 컴포넌트들의 state가 새로운 값으로 리렌더 됩니다.
+- unique한 id인 key로 구분되는 각 atom은 여러 컴포넌트에서 atom을 구독하고 있다면 그 컴포넌트들도 똑같은 상태를 공유합니다.
+
+## Recoil에서 Loadable의 개념에 대해 설명해주세요.
+
+> loadable은 atom이나 selector의 현재 상태를 나타내는 객체입니다.
+
+```js
+function UserInfo({userID}) {
+  const userNameLoadable = useRecoilValueLoadable(userNameQuery(userID));
+  switch (userNameLoadable.state) {
+    case 'hasValue':
+      return <div>{userNameLoadable.contents}</div>;
+    case 'loading':
+      return <div>Loading...</div>;
+    case 'hasError':
+      throw userNameLoadable.contents;
+  }
+}
+```
+
+- state
+  - atom 혹은 selector의 최신 상태입니다.
+  - 가능한 값은 `hasValue`, `loading`, `hasError`입니다.
+- contents
+  - Loadable에 의해 대표되는 값입니다.
+  - 상태가 hasValue 일때는 **실제 값**입니다.
+  - hasError 일때는 **던져진 Error**입니다.
+  - loading 이라면 toPromise()를 이용해 값의 Promise를 얻을 수 있습니다.
+
+## Recoil에서 비동기로 데이터를 받아올 때 State를 어떻게 관리하셨나요?
+
+atom이나 selector로 관리합니다.
+- atom
+  - atom()함수를 통해 생성하며 default 값으로 Loadable 객체를 설정 가능합니다.
+```js
+const myDataAtom = atom({
+  key: 'myDataAtom',
+  default: loadableWithPromise(fetchData())
+});
+```
+
+- selector
+
+```js
+const myDataAtom = atom({
+  key: 'myDataAtom',
+  default: []
+});
+
+const myDataSelector = selector({
+  key: 'myDataSelector',
+  get: async ({ get }) => {
+    const data = get(myDataAtom);
+    const response = await fetchData(data);
+    return response.data;
+  }
+});
+
+```
+
+컴포넌트에서는 useRecoilValue 같은 함수를 통해 값을 사용할 수 있습니다.
+
+## ⭐ Redux와 Recoil에 대해 비교 설명해주세요. (개념, 장단점)
+
+| 특징           | Redux                                                    | Recoil                                                      |
+| -------------- | -------------------------------------------------------- | ----------------------------------------------------------- |
+| 설계 철학      | 단일 상태 트리와 단방향 데이터 흐름을 기반으로 함        | 컴포넌트 계층 구조를 활용하여 로컬 및 전역 상태를 함께 관리 |
+| API 복잡성     | 초기 설정 및 액션/리듀서 작성에 일정한 학습 곡선 존재    | React Hooks를 활용한 직관적이고 간단한 API 제공             |
+| 상태 업데이트  | 액션 디스패치를 통해 리듀서 호출하고 상태를 변경 및 반환 | atom을 사용하여 상태 업데이트                               |
+| 보일러플레이트 | 사전에 작성해야할 코드가 많다                            | 코드가 비교적 간결하다                                      |
