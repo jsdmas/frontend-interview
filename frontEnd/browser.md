@@ -184,11 +184,6 @@ HTML 파서는 script 태그를 만나면 자바스크립트 코드를 실행하
 2. 서버는 응답헤더에 Access-Origin-Allow-Origin을 담아 클라이언트에 전달합니다.
 3. 클라이언트에서 Origin과 서버가 보내준 Access-Control-Allow-Origin을 비교합니다.
 
-### 해결 경험
-
-유저가 로그인 시 서버로 클라이언트 정보를 넘겨주지 못하는 문제를 axios의 `withCredentials: true`옵션을 통해 해결한 경험이 있습니다.  
-서버에서 Access-Control-Allow-Credentials 설정을 true 로 설정한 것 과 같은 설정입니다.
-
 # bundle의 사이즈를 줄이려면 어떻게 해야 하나요?
 
 1. Bundle Analayzer를 통해 크기가 큰 패키지를 확인하고 제거합니다.
